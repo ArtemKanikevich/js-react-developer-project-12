@@ -1,7 +1,16 @@
-import React from 'react';
+import React, {useEffect} from 'react';
 import logo from '../logo.svg';
 
 export const MainForm = () => {
+
+  //check !!
+  useEffect(() => {
+    localStorage.clear();  
+    console.log(`localStorage: `,localStorage);
+  });
+   
+  console.log(localStorage);
+
    return (
     <div className="App">
       <header className="App-header">
