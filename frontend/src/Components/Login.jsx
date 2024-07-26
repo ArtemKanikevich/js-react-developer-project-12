@@ -1,16 +1,18 @@
 import React from 'react';
-import { useNavigate } from 'react-router-dom';
+//import { useNavigate } from 'react-router-dom';
+import { useSelector, useDispatch } from 'react-redux';
 //import { Formik, Form, Field } from 'formik';
 import { useFormik } from 'formik';
 import * as yup from 'yup';
 import logins from '../routes.js';
 import axios from 'axios';
+import { setLogIn, removeLogIn, setError } from '../Slices/autorizSlice.js';
 
 const schema = yup.object().shape({
-    username: yup.string().trim().min(3, 'must be at least 3 characters long').
-    max(20, "Must be 20 characters or less").
+    username: yup.string().trim().min(3, 'User name must be at least 3 characters long').
+    max(20, "User name must be 20 characters or less").
     required("User name is a required field"),    
-    password: yup.string().required().min(4, 'must be at least 4 characters long'),    
+    password: yup.string().required().min(4, 'Password must be at least 4 characters long'),    
   });
 
 /*fields - объект с ключами полей userName, password.  
@@ -23,20 +25,31 @@ const validate = (fields) => {
       return keyBy(e.inner, 'path');
     }
   };  */
-
-export const SignupForm = () => {
-    const navigate = useNavigate();
+// форма авторизации
+export const LogInForm = () => {
+    //const navigate = useNavigate();   
+    // Возвращает метод store.dispatch() текущего хранилища
+    const dispatch = useDispatch();
+    
+    //render error from state.auth
+    const ShowAuthError = () => {
+      const err = useSelector((state) => state.auth.error);
+      if (err === "") return;
+      return (
+        <div>{err}</div>
+      )
+    };
 
     const autorizRequest = async (values) => {
       try {
-        const response = await axios.post(logins.loginPath(),values);
-        //const response = await axios.post("http://localhost:5001/api/v1/login", values);       
-        localStorage.setItem('jwtToken', response.data.token);        
-        navigate('/', { replace: false });
-        console.log(localStorage);
+        const response = await axios.post(logins.loginPath(),values);       
+        localStorage.setItem('userIdToken', response.data.token);           
+        console.log(localStorage);        
+        dispatch(setLogIn()); 
       }
       catch (err) {
         console.error (err);
+        dispatch(setError(err.message));
       }
     };
 
@@ -46,8 +59,7 @@ export const SignupForm = () => {
         password: "",
       },
       validationSchema: schema,
-      onSubmit: (values) => {
-        console.log(values);
+      onSubmit: (values) => {       
         autorizRequest(values);
        // console.log(JSON.stringify(values, null, 2));
       },
@@ -80,8 +92,9 @@ export const SignupForm = () => {
          <div>{formik.errors.password}</div>
        ) : null}
         
-        <button type="submit">Submit</button>
-      </form>
+        <button type="submit">Submit</button>  
+        <ShowAuthError/>      
+      </form>      
       </div>
     );
   };

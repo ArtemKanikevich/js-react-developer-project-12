@@ -1,16 +1,18 @@
 import React, {useEffect} from 'react';
+import { setLogIn, removeLogIn } from '../Slices/autorizSlice.js';
+import { useSelector, useDispatch } from 'react-redux';
 import logo from '../logo.svg';
 
 export const MainForm = () => {
+  const dispatch = useDispatch(); 
 
-  //check !!
+  //LogIn Reset
   useEffect(() => {
-    localStorage.clear();  
+   // localStorage.clear("userId");  
     console.log(`localStorage: `,localStorage);
+    //dispatch(removeLogIn());
   });
-   
-  console.log(localStorage);
-
+  
    return (
     <div className="App">
       <header className="App-header">
