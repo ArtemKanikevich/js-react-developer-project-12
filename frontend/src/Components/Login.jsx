@@ -4,10 +4,13 @@ import { useSelector, useDispatch } from 'react-redux';
 //import { Formik, Form, Field } from 'formik';
 import { useFormik } from 'formik';
 import * as yup from 'yup';
-import logins from '../routes.js';
 import axios from 'axios';
+import  {Form, Card}  from 'react-bootstrap';
+
+import logins from '../routes.js';
 import { setLogIn, removeLogIn, setError } from '../Slices/autorizSlice.js';
 
+ 
 const schema = yup.object().shape({
     username: yup.string().trim().min(3, 'User name must be at least 3 characters long').
     max(20, "User name must be 20 characters or less").
@@ -65,37 +68,54 @@ export const LogInForm = () => {
       },
     });    
 
-    return (
-      <div>   
-      <form onSubmit={formik.handleSubmit}>
-        <label htmlFor="username">User name</label>
-        <input
-          id="username"
-          name="username"
-          type="text"
-          onChange={formik.handleChange}
-          value={formik.values.username}
-        />
-        {formik.touched.username && formik.errors.username ? (
-         <div>{formik.errors.username}</div>
-       ) : null}
+    return (  
+      
+    <Card style={{ width: '20rem', margin: 'auto', }}>
+     <Card.Body>
+     <Card.Title size = 'lg'>Login</Card.Title>     
 
-        <label htmlFor="password">Password</label>
-        <input
-          id="password"
-          name="password"
-          type="password"
-          onChange={formik.handleChange}
-          value={formik.values.password}
-        />
-        {formik.touched.password && formik.errors.password ? (
-         <div>{formik.errors.password}</div>
-       ) : null}
-        
+      <Form onSubmit={formik.handleSubmit}>
+
+        <Form.Group className="mb-3" controlId="FormLogin.username">
+         <Form.Label htmlFor="username">User name</Form.Label>
+          <Form.Control
+           id="username"
+           name="username"
+           type="text"
+           onChange={formik.handleChange}
+           value={formik.values.username}
+           aria-describedby="usernameBlock"
+          />         
+          {formik.touched.username && formik.errors.username ? (
+            <Form.Text id="usernameBlock" muted>
+              {formik.errors.username}
+            </Form.Text> ) : null}
+        </Form.Group>        
+
+        <Form.Group className="mb-3" controlId="FormLogin.password">
+          <Form.Label htmlFor="password">Password</Form.Label>
+           <Form.Control
+            id="password"
+            name="password"
+            type="password"
+            onChange={formik.handleChange}
+            value={formik.values.password}
+            aria-describedby="passwordBlock"
+           />
+          {formik.touched.password && formik.errors.password ? (
+            <Form.Text id="passwordBlock" muted>
+              {formik.errors.password}
+            </Form.Text> ) : null}          
+        </Form.Group> 
+
         <button type="submit">Submit</button>  
-        <ShowAuthError/>      
-      </form>      
-      </div>
+        <ShowAuthError/>  
+
+        </Form> 
+
+       </Card.Body>
+      </Card>           
+     
     );
   };
   

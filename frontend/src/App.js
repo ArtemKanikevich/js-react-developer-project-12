@@ -4,6 +4,8 @@ import { BrowserRouter, Routes, Route, Navigate, Outlet } from 'react-router-dom
 import { LogInForm } from "./Components/Login.jsx";
 import  PageNotFound from "./Components/PageNotFound.jsx";
 import { MainForm } from "./Components/MainPage.jsx";
+import  NavbarContainer  from "./Components/Navbar.jsx";
+
 import { useSelector, useDispatch } from 'react-redux';
 
 /*<Route path="/" element={(
@@ -24,7 +26,9 @@ function App() {
   //if (logIn) <Navigate to="/"/>; 
 
   return (
+  
     <BrowserRouter>
+     <NavbarContainer/>
       <Routes>        
         <Route element={<PrivateRoutes/>}>
               <Route path='/' element={<MainForm/>} />
@@ -34,28 +38,6 @@ function App() {
         <Route path="*" element={<PageNotFound />} />
       </Routes>
     </BrowserRouter>
-
-    /*
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit
-          {' '}
-          <code>src/App.js</code>
-          {' '}
-          and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>      
-    </div> */
   );
 }
 
