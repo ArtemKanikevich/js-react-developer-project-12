@@ -5,14 +5,14 @@ import { useSelector, useDispatch } from 'react-redux';
 import { useFormik } from 'formik';
 import * as yup from 'yup';
 import axios from 'axios';
-import  {Form, Card}  from 'react-bootstrap';
+import  {Form, Card, Stack, Button}  from 'react-bootstrap';
 
 import logins from '../routes.js';
 import { setLogIn, removeLogIn, setError } from '../Slices/autorizSlice.js';
 
  
 const schema = yup.object().shape({
-    username: yup.string().trim().min(3, 'User name must be at least 3 characters long').
+    username: yup.string().required().trim().min(3, 'User name must be at least 3 characters long').
     max(20, "User name must be 20 characters or less").
     required("User name is a required field"),    
     password: yup.string().required().min(4, 'Password must be at least 4 characters long'),    
@@ -72,19 +72,20 @@ export const LogInForm = () => {
       
     <Card style={{ width: '20rem', margin: 'auto', }}>
      <Card.Body>
-     <Card.Title size = 'lg'>Login</Card.Title>     
+     <Card.Title>Login</Card.Title>     
 
       <Form onSubmit={formik.handleSubmit}>
 
         <Form.Group className="mb-3" controlId="FormLogin.username">
-         <Form.Label htmlFor="username">User name</Form.Label>
+         <Form.Label >User name</Form.Label>
           <Form.Control
-           id="username"
+           //id="username"
            name="username"
            type="text"
            onChange={formik.handleChange}
            value={formik.values.username}
            aria-describedby="usernameBlock"
+           className = {formik.touched.username && formik.errors.username ? "is-invalid" : null}
           />         
           {formik.touched.username && formik.errors.username ? (
             <Form.Text id="usernameBlock" muted>
@@ -93,26 +94,30 @@ export const LogInForm = () => {
         </Form.Group>        
 
         <Form.Group className="mb-3" controlId="FormLogin.password">
-          <Form.Label htmlFor="password">Password</Form.Label>
+          <Form.Label>Password</Form.Label>
            <Form.Control
-            id="password"
+            //id="password"
             name="password"
             type="password"
             onChange={formik.handleChange}
             value={formik.values.password}
             aria-describedby="passwordBlock"
+            className = {formik.touched.password && formik.errors.password ? "is-invalid" : null}
            />
           {formik.touched.password && formik.errors.password ? (
             <Form.Text id="passwordBlock" muted>
               {formik.errors.password}
             </Form.Text> ) : null}          
         </Form.Group> 
-
-        <button type="submit">Submit</button>  
+        
+        <Stack direction="horizontal" gap={3}>
+          <Button variant="success" type="submit">Submit</Button>
+          <Button variant="outline-secondary">Sing up</Button>{' '}
+        </Stack> 
+        
         <ShowAuthError/>  
 
         </Form> 
-
        </Card.Body>
       </Card>           
      
