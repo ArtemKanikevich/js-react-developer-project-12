@@ -7,8 +7,8 @@ import * as yup from 'yup';
 import axios from 'axios';
 import  {Form, Card, Stack, Button}  from 'react-bootstrap';
 
-import logins from '../routes.js';
-import { setLogIn, removeLogIn, setError } from '../Slices/autorizSlice.js';
+import paths from '../routes.js';
+import { setLogIn, removeLogIn, setLogError } from '../Slices/autorizSlice.js';
 import { useTranslation } from 'react-i18next';
 
 /*fields - объект с ключами полей userName, password.  
@@ -39,22 +39,32 @@ export const LogInForm = () => {
       const err = useSelector((state) => state.auth.error);
       if (err === "") return;
       return (
-        <div>{t('error') + err}</div>
+        <>
+        <br />
+        <div style = {{color: 'red'}}>{t('error') + err}</div>
+        </>
       )
     };
 
     const autorizRequest = async (values) => {
       try {
         //get id Token in login request
-        const response = await axios.post(logins.loginPath(),values);       
-        localStorage.setItem('userIdToken', response.data.token);           
+        const response = await axios.post(paths.loginPath(),values);   
+        if(response.data.token != undefined) {   
+           localStorage.setItem('userIdToken', response.data.token);  
+           //setlogin - true, render
+           dispatch(setLogIn()); 
+           //error reset
+           dispatch(setLogError(""));
+        }
+        else dispatch(setLogError(t('tokenErr')));          
         console.log(localStorage);        
-        dispatch(setLogIn()); 
+        
       }
       catch (err) {
         console.error (err);
         // save error in state
-        dispatch(setError(err.response ? err.response.statusText +`. `+err.message : err.message));
+        dispatch(setLogError(err.response ? err.response.statusText +`. `+err.message : err.message));
       }
     };
 
@@ -116,7 +126,7 @@ export const LogInForm = () => {
           <Button variant="success" type="submit">{t('submit')}</Button>
           <Button variant="outline-secondary">{t('sing_up')}</Button>
         </Stack> 
-        
+       
         <ShowAuthError/>  
 
         </Form> 

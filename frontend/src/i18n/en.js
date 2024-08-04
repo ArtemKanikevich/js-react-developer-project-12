@@ -16,6 +16,7 @@ const en = {
         login_message_4: 'Password is a required field',
         login_message_5: 'Password must be at least 5 characters long',
         error: 'Error ! ',
+        tokenErr: "Token is incorrect!" 
       
     }
   };

@@ -18,12 +18,12 @@ const autorizSlice = createSlice({
     removeLogIn: (state) => {
       state.logIn = false;
     },    
-    setError: (state, action) => {
+    setLogError: (state, action) => {
       state.error = action.payload;
     },
   },
 });
 
-export const { setLogIn, removeLogIn, setError } = autorizSlice.actions;
+export const { setLogIn, removeLogIn, setLogError } = autorizSlice.actions;
 // По умолчанию экспортируется редьюсер, сгенерированный слайсом
 export default autorizSlice.reducer;
