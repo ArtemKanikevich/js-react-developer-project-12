@@ -13,8 +13,11 @@ const channelsSlice = createSlice({
            // console.log(action);
             state.data = action.payload;
         },
+       setChannelsError: (state, action) => {
+            state.error = action.payload;
+          },
     }
 });       
 
-export const { addChannels } = channelsSlice.actions;
+export const { addChannels, setChannelsError } = channelsSlice.actions;
 export default channelsSlice.reducer;
