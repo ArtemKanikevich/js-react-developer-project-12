@@ -1,10 +1,13 @@
 import { createSlice } from '@reduxjs/toolkit';
 
+let logIn = false;
+if (localStorage.getItem("userIdToken")) logIn = true;
+
 // Начальное значение
 const initialState = {
-    userIdToken: "",
-    logIn: false,
+    userIdToken: "",    
     error: "",
+    logIn
 };
 
 const autorizSlice = createSlice({
@@ -12,9 +15,11 @@ const autorizSlice = createSlice({
   initialState,
   // Редьюсеры в слайсах мутируют состояние и ничего не возвращают наружу
   reducers: {
+    
     setLogIn: (state) => {
       state.logIn = true;
     },
+   
     removeLogIn: (state) => {
       state.logIn = false;
     },    

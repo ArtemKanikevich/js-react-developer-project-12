@@ -8,7 +8,7 @@ import axios from 'axios';
 import  {Form, Card, Stack, Button}  from 'react-bootstrap';
 
 import paths from '../routes.js';
-import { setLogIn, removeLogIn, setLogError } from "../Slices/autorizSlice.js";
+import { setLogIn, setLogError } from "../Slices/autorizSlice.js";
 import { useTranslation } from 'react-i18next';
 
 /*fields - объект с ключами полей userName, password.  
@@ -52,6 +52,7 @@ export const LogInForm = () => {
         const response = await axios.post(paths.loginPath(),values);   
         if(response.data.token != undefined) {   
            localStorage.setItem('userIdToken', response.data.token);  
+           localStorage.setItem('userIdName', values.username);  
            //setlogin - true, render
            dispatch(setLogIn()); 
            //error reset

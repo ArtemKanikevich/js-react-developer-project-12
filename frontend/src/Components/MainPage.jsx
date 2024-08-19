@@ -3,20 +3,21 @@ import { useSelector, useDispatch } from "react-redux";
 import axios from "axios";
 import  {Container, Row, Col, Card}  from 'react-bootstrap';
 import { io } from "socket.io-client";
-//import { setLogIn, removeLogIn } from '../Slices/autorizSlice.js';
+import { setLogIn, removeLogIn } from '../Slices/autorizSlice.js';
 import { addChannels, setChannelsError } from "../Slices/channelsSlice.js";
 import { addMessages, setMessagesError, addMessage } from "../Slices/messagesSlice.js";
 import paths from "../routes.js";
 import Messages from "./Messages.jsx";
+import Channals from "./Channals.jsx";
+
 //import logo from "../logo.svg";
 
 export const MainPage = () => {
   const dispatch = useDispatch();
-
-  //requests and show state in console
+    
   useEffect(() => {
-    // localStorage.clear("userId");
-    //dispatch(removeLogIn());
+    // localStorage.clear("userId");    
+    //dispatch(setLogIn());
     const token = localStorage.getItem("userIdToken");
 
     const getChannels = async (token) => {
@@ -78,36 +79,26 @@ export const MainPage = () => {
 
       socket.on('newMessage', (payload) => {
         console.log("New message from socket: ", payload); // => { body: "new message", channelId: 7, id: 8, username: "admin" }
-       // dispatch(addMessage(payload));
-      });
-    });    
-   
+        dispatch(addMessage(payload));
+      });     
+    });  
+    
+    return () => {
+      // Эта логика выполнится только при размонтировании компонента
+      console.log("Main Page unmount")
+    };
+    //dispatch(setLogIn());
     //only in first render []
-  }, []);
-  
-  //New message
-  const addMessage =  async (text) =>{
-    const token = localStorage.getItem("userIdToken");
-    const newMessage = { body: text, channelId: '1', username: 'admin' }; // admin!!!!
-    try {
-      const response = await axios.post(paths.messagesPath(), newMessage, {
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
-      });
-      console.log(`New message from post: `, response.data); // =>[{ id: '1', name: 'general', removable: false }, ...]
-      //dispatch(addMessage(response.data));
-
-    } catch (err) {
-      console.error(err);
-      dispatch(setMessagesError(err.response ? err.response.statusText +`. `+err.message : err.message));
-      throw err;
-    }      
-  };  
-  
+  },[]);  
 
   return (
-     <Messages sendMessage = {addMessage} />
+    <Container>
+      <div className="content">      
+        <Channals/>
+        <Messages/>
+
+      </div>     
+    </Container> 
       
     );  
 }; 

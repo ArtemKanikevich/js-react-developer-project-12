@@ -1,12 +1,14 @@
 import './App.css';
-
+import React, { useEffect } from "react";
 import { BrowserRouter, Routes, Route, Navigate, Outlet } from 'react-router-dom';
+import { useSelector, useDispatch } from 'react-redux';
+
 import { LogInForm } from "./Components/Login.jsx";
 import  PageNotFound from "./Components/PageNotFound.jsx";
 import { MainPage } from "./Components/MainPage.jsx";
 import  NavbarContainer  from "./Components/Navbar.jsx";
+import { setLogIn, removeLogIn } from './Slices/autorizSlice.js';
 
-import { useSelector, useDispatch } from 'react-redux';
 
 /*<Route path="/" element={(
   <PrivateRoute>
@@ -15,8 +17,17 @@ import { useSelector, useDispatch } from 'react-redux';
 )}/> */
 
 function App() {
+
+  const dispatch = useDispatch();
+ /* 
+  useEffect(() => {
+    if (localStorage.getItem('userIdToken'))
+      dispatch(setLogIn());
+    
+  },[]) */
+
   const logIn = useSelector((state) => state.auth.logIn);
-  console.log(`logIn: `,logIn);
+  //console.log(`logIn: `,logIn);
   //const logIn = false;
   const PrivateRoutes = () => {    
      return (
