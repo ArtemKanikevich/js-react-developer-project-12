@@ -4,6 +4,7 @@ import { BrowserRouter, Routes, Route, Navigate, Outlet } from 'react-router-dom
 import { useSelector, useDispatch } from 'react-redux';
 
 import { LogInForm } from "./Components/Login.jsx";
+import { Singup } from "./Components/Singup.jsx";
 import  PageNotFound from "./Components/PageNotFound.jsx";
 import { MainPage } from "./Components/MainPage.jsx";
 import  NavbarContainer  from "./Components/Navbar.jsx";
@@ -46,6 +47,7 @@ function App() {
               
         </Route>
         <Route path="/login" element={ logIn ? <Navigate to="/"/> : <LogInForm />} />
+        <Route path="/singup" element={<Singup/>} />
         <Route path="*" element={<PageNotFound />} />
       </Routes>
     </BrowserRouter>

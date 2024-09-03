@@ -29,7 +29,7 @@ export const MainPage = () => {
         });
         console.log(`channels: `, response); // =>[{ id: '1', name: 'general', removable: false }, ...]
         dispatch(addChannels(response.data));
-
+       
       } catch (err) {
         console.error(err);
         dispatch(setChannelsError(err.response ? err.response.statusText +`. `+err.message : err.message));

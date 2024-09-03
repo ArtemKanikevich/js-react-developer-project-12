@@ -1,7 +1,6 @@
 import React from 'react';
 //import { useNavigate } from 'react-router-dom';
 import { useSelector, useDispatch } from 'react-redux';
-import { useNavigate } from 'react-router-dom';
 //import { Formik, Form, Field } from 'formik';
 import { useFormik } from 'formik';
 import * as yup from 'yup';
@@ -24,19 +23,21 @@ const validate = (fields) => {
     }
   };  */
 // форма авторизации
-export const LogInForm = () => {
+export const Singup = () => {
     //const navigate = useNavigate();   
     // Возвращает метод store.dispatch() текущего хранилища
     const dispatch = useDispatch();
     const { t } = useTranslation();
-    //huke for singup form
-    const navigate = useNavigate();
     // validation object 
     const schema = yup.object().shape({
       username: yup.string().trim().min(3, t('login_message_1')).
       max(20, t('login_message_2')).required(t('login_message_3')),    
       password: yup.string().required(t('login_message_4')).
       min(5, t('login_message_5')), 
+      confirmPassword: yup.string()
+      .oneOf([yup.ref('password'), null], t('login_message_7'))
+      .required(t('login_message_6')),
+
     });    
     //render error from state.auth
     const ShowAuthError = () => {
@@ -53,19 +54,17 @@ export const LogInForm = () => {
     const autorizRequest = async (values) => {
       try {
         //get id Token in login request
-        const response = await axios.post(paths.loginPath(),values);   
-        if(response.data.token != undefined) {   
+        const response = await axios.post(paths.signupPath(),values);
+           
+           console.log(response.data);  
            localStorage.setItem('userIdToken', response.data.token);  
            localStorage.setItem('userIdName', values.username);  
            //setlogin - true, render
            dispatch(setLogIn()); 
            //error reset
            dispatch(setLogError(""));
-        }
-        else dispatch(setLogError(t('tokenErr')));          
-        console.log(localStorage);        
-        
-      }
+        }      
+      
       catch (err) {
         console.error (err);
         // save error in state
@@ -77,24 +76,23 @@ export const LogInForm = () => {
       initialValues: {
         username: "",
         password: "",
+        confirmPassword: '',
       },
       validationSchema: schema,
       onSubmit: (values) => {       
-        autorizRequest(values);
-       // console.log(JSON.stringify(values, null, 2));
+        
+        const { confirmPassword, ...reqValues  } = values;  
+        autorizRequest(reqValues);
+       // console.log(reqValues);
       },
-    });    
-
-    const singupClick =(e) =>{
-      navigate("/singup");
-     // console.log("signUp");
-    }
+    });  
+    
 
     return (  
       
     <Card style={{ width: '20rem', margin: 'auto', }}>
      <Card.Body>
-     <Card.Title>{t('login')}</Card.Title>     
+     <Card.Title>{t('sing_up')}</Card.Title>     
 
       <Form onSubmit={formik.handleSubmit}>
 
@@ -134,11 +132,28 @@ export const LogInForm = () => {
               {formik.errors.password}
             </Form.Text> ) : null}          
         </Form.Group> 
-        
-        <Stack direction="horizontal" gap={3}>
-          <Button variant="success" type="submit">{t('submit')}</Button>
-          <Button variant="outline-secondary" onClick={singupClick}>{t('sing_up')}</Button>
-        </Stack> 
+
+        <Form.Group className="mb-3" controlId="FormLogin.confirmPassword">
+          <Form.Label>{t('conf_password')}</Form.Label>
+           <Form.Control
+           // id="password"
+            name="confirmPassword"
+            type="password"
+            onChange={formik.handleChange}
+            value={formik.values.confirmPassword}
+            aria-describedby="confirmPassword"
+            autoComplete="current-password"
+            className = {formik.touched.confirmPassword && formik.errors.confirmPassword ? "is-invalid" : null}
+           />
+          {formik.touched.confirmPassword && formik.errors.confirmPassword ? (
+            <Form.Text id="confirmPasswordBlock" muted>
+              {formik.errors.confirmPassword}
+            </Form.Text> ) : null}          
+        </Form.Group>         
+       
+        <div className="d-grid gap-2">
+          <Button variant="success" type="submit">{t('create_user')}</Button>
+        </div>       
        
         <ShowAuthError/>  
 
@@ -148,5 +163,5 @@ export const LogInForm = () => {
      
     );
   };
-  
-  
+
+ // <Stack direction="horizontal" gap={3} className="col-md-5 mx-auto">

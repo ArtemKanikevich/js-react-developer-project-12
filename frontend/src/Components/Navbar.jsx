@@ -2,7 +2,8 @@ import React from 'react';
 import { Navbar, ButtonGroup, ToggleButton, Container, Button } from 'react-bootstrap';
 import { useTranslation } from 'react-i18next';
 import { useState } from 'react';
-
+//import { FlaticonIcon } from '@flaticon/flaticon-uicons';
+import '@flaticon/flaticon-uicons/css/all/all.css';
 
 function LngButtons() { 
   const { t, i18n } = useTranslation();
@@ -38,14 +39,18 @@ function LngButtons() {
   );
 }  
 
+
+
 const NavbarContainer = () => { 
 
     return (
       <>   
       <Navbar expand="sm" bg="light" className="bg-body-tertiary" data-bs-theme="light">
         <Container>
-          <Navbar.Brand href="#">Slack Chat</Navbar.Brand>           
-          <LngButtons/>                
+          <Navbar.Brand href="#">Slack Chat</Navbar.Brand>            
+                 
+            <LngButtons/> 
+                   
         </Container>
       </Navbar>
       <br />
@@ -54,3 +59,6 @@ const NavbarContainer = () => {
   }
   
   export default NavbarContainer;
+
+  //<Button variant="secondary" size="sm">
+  //<Navbar.Collapse className="justify-content-end"></Navbar.Collapse>

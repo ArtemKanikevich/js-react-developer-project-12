@@ -1,3 +1,15 @@
+
+
+.navbar__icons {
+ text-decoration: none;
+ color: black;
+ 
+}
+
+.icon_home{
+   font-size:  20px;  
+}   
+ 
  .content {
   display: flex;  
   flex-direction: row;
@@ -9,6 +21,8 @@
   background-color: rgb(225, 248, 230);
   width: 30%;
   margin-right: 5px;
+  display: flex;
+  flex-direction: column;
  }
 
  .messages__container{
@@ -22,22 +36,59 @@
  }
 
  .messages__active-chanal{
-  height:120px;
-  background-color: antiquewhite;
+  display: flex; 
+  align-items: center;
+ 
+  justify-content: space-between;
+  flex-direction: row;
   padding-left: 15px;
-  padding-top: 15px;
+  padding-right: 15px;
+  min-height:80px;
+  background-color: antiquewhite;
   
  }
 
+ 
  .messages__list{
-  padding-left: 50px;
+  overflow-y: auto;  
+  padding-left: 20px;
   padding-top: 15px;
   height: 100%;
+  
+  
  }
 
  .message__input{
   padding-left: 15px;
   padding-right: 15px;  
+ }
+
+ .messages__ul{
+  list-style-type: none;
+ }
+
+ .branches__title {
+    height:80px;
+    background-color: antiquewhite;
+    padding-right: 15px;
+    padding-left: 15px;
+    display: flex;
+    justify-content: space-between;
+    flex-direction: row;
+    align-items: center;
+
+ }
+
+ .branches__list{
+   display: flex;
+   flex-direction: column;    
+   overflow-y: auto; 
+ }
+
+ .branches__element{
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
  }
 
  
