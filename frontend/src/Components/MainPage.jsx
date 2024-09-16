@@ -4,7 +4,7 @@ import axios from "axios";
 import  {Container, Row, Col, Card}  from 'react-bootstrap';
 import { io } from "socket.io-client";
 import { setLogIn, removeLogIn } from '../Slices/autorizSlice.js';
-import { addChannels, setChannelsError } from "../Slices/channelsSlice.js";
+import { addChannels, addChannel, setChannelsError } from "../Slices/channelsSlice.js";
 import { addMessages, setMessagesError, addMessage } from "../Slices/messagesSlice.js";
 import paths from "../routes.js";
 import Messages from "./Messages.jsx";
@@ -80,7 +80,12 @@ export const MainPage = () => {
       socket.on('newMessage', (payload) => {
         console.log("New message from socket: ", payload); // => { body: "new message", channelId: 7, id: 8, username: "admin" }
         dispatch(addMessage(payload));
-      });     
+      });
+      
+      socket.on('newChannel', (payload) => {
+         console.log("New channel from socket: ", payload); // => { body: "new message", channelId: 7, id: 8, username: "admin" }
+         dispatch(addChannel(payload));
+      });
     });  
     
     return () => {

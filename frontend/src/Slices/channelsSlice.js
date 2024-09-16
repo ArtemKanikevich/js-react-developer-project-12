@@ -21,10 +21,14 @@ const channelsSlice = createSlice({
           },
        setCurrentChannel: (state, action) => {
             state.currentCh = action.payload;
-       }   
+       },
+       addChannel: (state, action) => {
+          // console.log(action);
+           state.data = [...state.data, action.payload];
+       },     
     
     }
 });       
 
-export const { addChannels, setChannelsError, setCurrentChannel } = channelsSlice.actions;
+export const { addChannel, addChannels, setChannelsError, setCurrentChannel } = channelsSlice.actions;
 export default channelsSlice.reducer;
