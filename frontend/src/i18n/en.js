@@ -32,11 +32,13 @@ const en = {
         rename: "Rename",
         remove: "Remove",
         
+        
 
         channel_message_1: 'Name must be at least 3 characters long',
         channel_message_2: 'Name must be 20 characters or less',
         channel_message_3: 'Required field',
         channel_message_4: "This channel already exist",
+        channel_message_5: "Are you sure ?"
 
       
     }

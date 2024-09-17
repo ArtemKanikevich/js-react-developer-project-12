@@ -6,7 +6,7 @@ import { useFormik } from 'formik';
 import  {Container, Row, Col, Card, Form, Button, Stack, InputGroup}  from 'react-bootstrap';
 import { useTranslation } from 'react-i18next';
 import { uniqueId } from 'lodash' ;
-//import { addMessages, setMessagesError, addMessage } from "../Slices/messagesSlice.js";
+import { addMessages, setMessagesError, addMessage } from "../Slices/messagesSlice.js";
 import { removeLogIn } from "../Slices/autorizSlice.js";
 import paths from "../routes.js";
 
@@ -39,8 +39,8 @@ const Messages = () => {
              
         } catch (err) {
           console.error(err);
-          store.dispatch(setMessagesError(err.response ? err.response.statusText +`. `+err.message : err.message));
-          throw err;
+          dispatch(setMessagesError(err.response ? err.response.statusText +`. `+err.message : err.message));
+        //  throw err;
         }
     };
 

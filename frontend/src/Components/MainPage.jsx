@@ -4,7 +4,7 @@ import axios from "axios";
 import  {Container, Row, Col, Card}  from 'react-bootstrap';
 import { io } from "socket.io-client";
 import { setLogIn, removeLogIn } from '../Slices/autorizSlice.js';
-import { addChannels, addChannel, setChannelsError } from "../Slices/channelsSlice.js";
+import { renameChannel, removeChannel, addChannels, addChannel, setChannelsError, setCurrentChannel } from "../Slices/channelsSlice.js";
 import { addMessages, setMessagesError, addMessage } from "../Slices/messagesSlice.js";
 import paths from "../routes.js";
 import Messages from "./Messages.jsx";
@@ -19,6 +19,7 @@ export const MainPage = () => {
     // localStorage.clear("userId");    
     //dispatch(setLogIn());
     const token = localStorage.getItem("userIdToken");
+    const firstId = "1";  //general
 
     const getChannels = async (token) => {
       try {
@@ -86,6 +87,19 @@ export const MainPage = () => {
          console.log("New channel from socket: ", payload); // => { body: "new message", channelId: 7, id: 8, username: "admin" }
          dispatch(addChannel(payload));
       });
+
+      socket.on('removeChannel', (payload) => {
+         console.log("Channel was delated from socket: ", payload); // id
+         dispatch(removeChannel(payload));
+         // set current Ch after delete  ?? find ??
+         dispatch(setCurrentChannel(firstId));
+      }); 
+
+      socket.on('renameChannel', (payload) => {
+         console.log("Channel was renamed from socket: ", payload); // id
+         dispatch(renameChannel(payload));
+      });
+
     });  
     
     return () => {
