@@ -8,7 +8,7 @@ import { renameChannel, removeChannel, addChannels, addChannel, setChannelsError
 import { addMessages, setMessagesError, addMessage } from "../Slices/messagesSlice.js";
 import paths from "../routes.js";
 import Messages from "./Messages.jsx";
-import Channals from "./Channals.jsx";
+import Channels from "./Channels.jsx";
 
 //import logo from "../logo.svg";
 
@@ -79,7 +79,7 @@ export const MainPage = () => {
       });
 
       socket.on('newMessage', (payload) => {
-        console.log("New message from socket: ", payload); // => { body: "new message", channelId: 7, id: 8, username: "admin" }
+        //console.log("New message from socket: ", payload); // => { body: "new message", channelId: 7, id: 8, username: "admin" }
         dispatch(addMessage(payload));
       });
       
@@ -113,7 +113,7 @@ export const MainPage = () => {
   return (
     <Container>
       <div className="content">      
-        <Channals/>
+        <Channels/>
         <Messages/>
 
       </div>     

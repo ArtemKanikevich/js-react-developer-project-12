@@ -1,16 +1,16 @@
 import React, { useEffect, useState } from "react";
 import { useTranslation } from 'react-i18next';
 import { useSelector, useDispatch } from "react-redux";
-import axios from "axios";
-import { useFormik } from 'formik';
+//import axios from "axios";
+//import { useFormik } from 'formik';
 import  {Container, ListGroup, Dropdown, ButtonGroup, Row, Col, Card, Form, Button, Modal, DropdownButton, InputGroup}  from 'react-bootstrap';
-import * as yup from 'yup';
+//import * as yup from 'yup';
 import { setCurrentChannel } from "../Slices/channelsSlice.js";
 //import { addMessages, setMessagesError, addMessage } from "../Slices/messagesSlice.js";
-import paths from "../routes.js";
-
+//import paths from "../routes.js";
 import ModalRemChannel from "./ModalRemChannel.jsx";
-import ModalNewChannel from "./ModalNewChannel.jsx";
+import ModalChannel from "./ModalChannel.jsx";
+//import ButtonChannel from "./ButtonChannel.jsx";
 
 
 const Channals = () => {
@@ -45,19 +45,24 @@ const Channals = () => {
           elem.removable ? (
           <Dropdown as={ButtonGroup} key = {`channal-${elem.id}`}
           onSelect = {(eventKey, e) => showModal(eventKey, elem.id)}>
-              <Button onClick = {handleClick}  variant={currentCh === elem.id ? "success": "outline-secondary"} data-as-id = {elem.id}>{elem.name}</Button>
-              <Dropdown.Toggle split  variant={currentCh === elem.id ? "success": "outline-secondary"} id={`dropdown-split-${elem.id}`}/> 
+              <Button  className="w-100 text-start button__channel"
+              onClick = {handleClick}  variant={currentCh === elem.id ? "success": "light"} data-as-id = {elem.id}>{`# ${elem.name}`}</Button>
+              <Dropdown.Toggle className="button__channel" split  variant={currentCh === elem.id ? "success": "light"} id={`dropdown-split-${elem.id}`}/> 
               <Dropdown.Menu>
                 <Dropdown.Item eventKey ="1">{t("rename")}</Dropdown.Item>
                 <Dropdown.Item eventKey ="2">{t("remove")}</Dropdown.Item>                
               </Dropdown.Menu>
           </Dropdown>
           ):
-           <Button key = {`channal-${elem.id}`} onClick = {handleClick} variant={currentCh === elem.id ? "success": "outline-secondary"} data-as-id = {elem.id}>{elem.name}</Button>
-        ))}               
-      
+           <Button className="w-100 text-start button__channel"
+           key = {`channal-${elem.id}`} onClick = {handleClick} variant={currentCh === elem.id ? "success": "light"} data-as-id = {elem.id}>{`# ${elem.name}`}</Button>
+        ))}    
+
+
+
+
         {ModalCh.show ? (
-          <ModalNewChannel
+          <ModalChannel
           show={ModalCh.show}
           onHide={() => setModalCh({show: false, newCh: "false", id: "0"})}
           isitnewch = {ModalCh.newCh}

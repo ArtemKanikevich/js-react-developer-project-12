@@ -19,8 +19,7 @@ const ModalRemChannel = (props) => {
     //remove Channel
     const removeCh = async (id) =>{          
       //         
-      try {
-       
+      try {       
         const response = await axios.delete([paths.channelsPath(), id].join("/"), {
           headers: {
             Authorization: `Bearer ${token}`,
@@ -29,8 +28,7 @@ const ModalRemChannel = (props) => {
         console.log(`Channel id: ${response.data.id} was deleted `); 
                 
         //remove modal
-        props.onHide();
-        
+        props.onHide();        
            
       } catch (err) {
         console.error(err);

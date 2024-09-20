@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useRef, useEffect } from "react";
 import { useTranslation } from 'react-i18next';
 import { useSelector, useDispatch } from "react-redux";
 import axios from "axios";
@@ -13,16 +13,29 @@ import paths from "../routes.js";
 const ModalNewChannel = (props) => {
   const { t } = useTranslation();
   const dispatch = useDispatch();
+  const inputRef = useRef(null);
   const { allchannels, isitnewch, idch  } = props;
   const token = localStorage.getItem("userIdToken"); 
   //get names from allchannels
   const namesCh = allchannels.map(elem => elem.name);
   let activeNameCh = "";
+  let title = "";
+
+  useEffect(() => {
+    if (inputRef.current) {
+     // console.log(inputRef.current);
+      inputRef.current.focus(); // Устанавливаем фокус
+      inputRef.current.select(); // Выделяем текст
+    }
+  }, []);
 
   //check for rename
-  if (isitnewch === 'false') 
+  if (isitnewch === 'false') {
     activeNameCh = allchannels.find(elem => elem.id === idch).name;  
-
+    title = t("rename")+" "+ t("channel");}
+  if (isitnewch === 'true')  {
+    title = t("add")+" "+ t("channel");
+  }
   //console.log("activeNameCh :", activeNameCh);
   //console.log("isitnewch :", isitnewch);
   //console.log("idch :", idch);  
@@ -102,7 +115,7 @@ const ModalNewChannel = (props) => {
 
       <Modal.Header closeButton>
         <Modal.Title id="contained-modal-title-vcenter">
-          {t("addChannel")}
+          {title}
         </Modal.Title>
       </Modal.Header>
 
@@ -115,7 +128,8 @@ const ModalNewChannel = (props) => {
          value={formik.values.newChannel}            
          aria-describedby="newChannel"
          className = {formik.touched.newChannel && formik.errors.newChannel ? "is-invalid" : null}
-         autoFocus                  
+         autoFocus
+         ref={inputRef}                  
          />
           {(formik.touched.newChannel && formik.errors.newChannel) ? 
           <Form.Text id="newChanneleBlock" muted>

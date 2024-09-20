@@ -25,7 +25,7 @@ const ru = {
         channel: "канал",
         sent: 'Отправить',
         newMessage: "Новое сообщение",
-        addChannel: "Добавить канал",
+        add: "Добавить",
         cancel: "Отменить",
         rename: "Переименовать",
         remove: "Удалить",

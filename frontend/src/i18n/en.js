@@ -25,14 +25,12 @@ const en = {
 
         channels: "Channels",
         channel: "channel",
-        sent: 'Sent',
+        sent: 'Send',
         newMessage: "New message",
-        addChannel: "Add channel",
+        add: "Add",
         cancel: "Cancel",
         rename: "Rename",
-        remove: "Remove",
-        
-        
+        remove: "Remove",        
 
         channel_message_1: 'Name must be at least 3 characters long',
         channel_message_2: 'Name must be 20 characters or less',

@@ -3,7 +3,7 @@ import { createSlice } from '@reduxjs/toolkit';
 // Начальное значение
 const initialState = {
      //set current chanal  = 1
-     currentCh: "1"
+     currentCh: "3"
 };
 
 const channelsSlice = createSlice({
@@ -27,7 +27,8 @@ const channelsSlice = createSlice({
            state.data = [...state.data, action.payload];
        },
        removeChannel: (state, action) => {
-        state.data = state.data.filter(ch => ch.id != action.payload.id); 
+        const chId = action.payload.id;
+        state.data = state.data.filter(ch => ch.id != chId); 
        // console.log("new state!");
        },
        renameChannel: (state, action) => {
