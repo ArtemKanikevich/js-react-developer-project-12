@@ -2,7 +2,9 @@ import { createSlice } from '@reduxjs/toolkit';
 import { removeChannel } from "./channelsSlice.js";
 
 // Начальное значение
-const initialState = {};
+const initialState = {
+    visibleItems: 50
+};
 
 const messagesSlice = createSlice({
     name: 'messages',
@@ -20,7 +22,11 @@ const messagesSlice = createSlice({
         addMessage: (state, action) => {
             // console.log(action);
              state.data = [...state.data, action.payload];
-         },  
+         },
+         loadMoreItems: (state, action) => {
+            if (!action.payload) state.visibleItems = state.visibleItems + 30;
+            else state.visibleItems = action.payload;
+       },  
     },
     extraReducers: (builder) => { 
             builder.addCase(removeChannel, (state, action) => {
@@ -31,5 +37,5 @@ const messagesSlice = createSlice({
 
 });    
 
-export const { addMessages, setMessagesError, addMessage } = messagesSlice.actions;
+export const { addMessages, setMessagesError, addMessage, loadMoreItems } = messagesSlice.actions;
 export default messagesSlice.reducer;

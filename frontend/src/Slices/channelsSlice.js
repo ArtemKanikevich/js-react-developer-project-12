@@ -3,7 +3,7 @@ import { createSlice } from '@reduxjs/toolkit';
 // Начальное значение
 const initialState = {
      //set current chanal  = 1
-     currentCh: "3"
+     currentCh: "1"
 };
 
 const channelsSlice = createSlice({

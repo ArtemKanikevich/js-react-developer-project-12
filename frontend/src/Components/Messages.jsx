@@ -6,7 +6,7 @@ import { useFormik } from 'formik';
 import  {Container, Row, Col, Card, Form, Button, Spinner, InputGroup}  from 'react-bootstrap';
 import { useTranslation } from 'react-i18next';
 import { uniqueId } from 'lodash' ;
-import { addMessages, setMessagesError, addMessage } from "../Slices/messagesSlice.js";
+import { addMessages, setMessagesError, addMessage, loadMoreItems } from "../Slices/messagesSlice.js";
 import { removeLogIn } from "../Slices/autorizSlice.js";
 import paths from "../routes.js";
 import {getAmount, insertMessages} from "../addmessages.js";
@@ -21,25 +21,72 @@ const Messages = () => {
     const navigate = useNavigate();
     //spiner
     const[loading, setLoading] = useState(true);
+    //infinite scroll
+   // const [visibleItems, setVisibleItems] = useState(20); // Изначально показываем 20 элементов
 
     const messagesArr = useSelector((state) => state.messages.data);
     const { currentCh } = useSelector((state) => state.channels);   
-    const channelsArr =  useSelector((state) => state.channels.data);   
+    const channelsArr =  useSelector((state) => state.channels.data);  
+    const visibleItems =  useSelector((state) => state.messages.visibleItems); 
     const token = localStorage.getItem("userIdToken");   
     const userName =  localStorage.getItem("userIdName");
+    let mesAmount = 0;
 
+    //пропускаем перв. рендер  
+    if (messagesArr != undefined && channelsArr != undefined ) 
+      mesAmount = messagesArr.reduce((acc,cur)=> cur.channelId === currentCh ? acc + 1 : acc, 0);
+    
+    //console.log("visibleItems :",visibleItems);
+    //infinite scroll    
+    const handleScroll = () => {   
+      const { scrollTop, clientHeight, scrollHeight } = listRef.current;   
+     // console.log("scrollTop :", scrollTop);     
+     // console.log("visItems :",visibleItems);      
+     // console.log("mesAmount :", mesAmount);       
+     //console.log("clientHeight :", clientHeight);
+     // console.log("crollHeight :", scrollHeight);
+      // Если пользователь прокрутил до конца страницы, загружаем больше элементов
+      if ((scrollTop === 0) && (mesAmount > visibleItems)) {          
+        dispatch(loadMoreItems());
+        listRef.current.scrollTop = clientHeight;
+      }  
+     // if (scrollTop + clientHeight >= scrollHeight) {
+     //   loadMoreItems();
+     // }
+    };    
+   
+    //infinite scroll  
     useEffect(() => {
+      if (listRef.current)
+        listRef.current.addEventListener('scroll', handleScroll);
+     // console.log(listRef.current);
+     // console.log("Scroll mount !"); 
+      return () => {
+        // Эта логика выполнится только при размонтировании компонента
+      //  console.log("Scroll page Unmount");        
+        //Убираем обработчик
+        if (listRef.current)
+          listRef.current.removeEventListener('scroll', handleScroll);
+      }  
+    }, [messagesArr, currentCh, channelsArr, visibleItems]); 
+
+
+    useEffect(() => {    
+      //Скролл внизу 
+      if (listRef.current)        
+        listRef.current.scrollTop = listRef.current.scrollHeight;      
+
       if (inputRef.current) {       
         inputRef.current.focus(); // Устанавливаем фокус
       }
       setTimeout(() => setLoading(false), 500);      
-      if (listRef.current)
-        listRef.current.scrollTop = listRef.current.scrollHeight;
-
+      
       return () => {
         // Эта логика выполнится только при размонтировании компонента
-        console.log("Messages page unmount");
-        setLoading(true);
+       // console.log("Messages page unmount");
+        setLoading(true);        
+        //возвращаем показ 20 элементов
+        dispatch(loadMoreItems(50));
       };
     }, [messagesArr, currentCh, channelsArr]);    
 
@@ -53,8 +100,7 @@ const Messages = () => {
             },
           });
           console.log(`New message was sent `, response.data); // =>[{ id: '1', name: 'general', removable: false }, ...]
-          return true;          
-             
+          return true;             
         } catch (err) {
           console.error(err);
           dispatch(setMessagesError(err.response ? err.response.statusText +`. `+err.message : err.message));
@@ -87,18 +133,18 @@ const Messages = () => {
           formik.values.message = "";
         }
       }       
-    });      
-
-     // <Form.Group className="mb-3" controlId="formBasicText">
+    });  
+    
+    // <Form.Group className="mb-3" controlId="formBasicText">
 
     return (
     //пропускаем перв. рендер  
-    messagesArr != undefined ? (  
+    messagesArr != undefined && channelsArr != undefined ? (  
     <div className="messages messages__container">        
        <div className="messages__active-chanal">                
           <div className="messages__active-chanal-name">
            <b># {channelsArr.find (elem => elem.id === currentCh).name}</b><br/>
-           {messagesArr.reduce((acc,cur)=> cur.channelId === currentCh ? acc + 1 : acc, 0)}
+           {mesAmount}
           </div>
 
           {loading &&
@@ -113,10 +159,12 @@ const Messages = () => {
 
        <div ref={listRef} className="messages__list">
         <ul  className="messages__ul">
-          { messagesArr.map(elem => (
-            elem.channelId === currentCh ? (
-            <li key = {uniqueId()}><b>{elem.username}:</b> {elem.body}</li>) : null)
-          )}           
+          { messagesArr.filter(elem => 
+            elem.channelId === currentCh )
+            .map(elem =>
+            <li key = {uniqueId()}><b>{elem.username}:</b> {elem.body}</li>
+          ).slice(-visibleItems)
+          }           
          </ul>
        </div>
 

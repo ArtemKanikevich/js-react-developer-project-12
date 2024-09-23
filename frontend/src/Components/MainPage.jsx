@@ -1,7 +1,7 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import axios from "axios";
-import  {Container, Row, Col, Card}  from 'react-bootstrap';
+import  {Container, Spinner}  from 'react-bootstrap';
 import { io } from "socket.io-client";
 import { setLogIn, removeLogIn } from '../Slices/autorizSlice.js';
 import { renameChannel, removeChannel, addChannels, addChannel, setChannelsError, setCurrentChannel } from "../Slices/channelsSlice.js";
@@ -14,12 +14,15 @@ import Channels from "./Channels.jsx";
 
 export const MainPage = () => {
   const dispatch = useDispatch();
-    
+  const[loading, setLoading] = useState(true);
+  
   useEffect(() => {
     // localStorage.clear("userId");    
     //dispatch(setLogIn());
     const token = localStorage.getItem("userIdToken");
     const firstId = "1";  //general
+    let socketV = null;
+    
 
     const getChannels = async (token) => {
       try {
@@ -55,8 +58,9 @@ export const MainPage = () => {
       }      
     };
  
-    
-    Promise.all([getChannels(token), getMessages(token)]).then(()=> {    
+    const socketConnect = () => {
+      //close spinner
+      setLoading(false);      
       //console.log ("Socket start!");
       const socket = io('http://localhost:5001', {
         transports: ['websocket', 'polling'],
@@ -65,6 +69,10 @@ export const MainPage = () => {
       
       socket.on("connect", () => {        
         console.log("Connect: ", socket.connected); // true
+      });
+
+      socket.on("disconnect", () => {        
+        console.log("Connect: ", socket.connected); // false
       });
 
       socket.on("connect_error", (error) => {
@@ -99,12 +107,18 @@ export const MainPage = () => {
          console.log("Channel was renamed from socket: ", payload); // id
          dispatch(renameChannel(payload));
       });
+      
+      return socket;
+    };
+    
 
-    });  
+    Promise.all([getChannels(token), getMessages(token)]).then(() => socketV = socketConnect());
+    //.then((socket)=> socketV = socket);
     
     return () => {
       // Эта логика выполнится только при размонтировании компонента
-      console.log("Main Page unmount")
+      console.log("Main Page unmount");      
+      socketV.disconnect();
     };
     //dispatch(setLogIn());
     //only in first render []
@@ -113,9 +127,18 @@ export const MainPage = () => {
   return (
     <Container>
       <div className="content">      
-        <Channels/>
-        <Messages/>
-
+        {loading ? (
+           <div className="spinner__container">
+            <Spinner animation="border" role="status" variant="success">
+               <span className="visually-hidden">Loading...</span>
+            </Spinner> 
+           </div>
+           ):
+         <>  
+         <Channels/>
+         <Messages/>
+         </>
+        }
       </div>     
     </Container> 
       

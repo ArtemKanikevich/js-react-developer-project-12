@@ -17,6 +17,14 @@
   padding-bottom: 25px; 
  }
 
+ .spinner__container{
+   width: 100%;
+   display: flex;
+   align-items: center;
+   justify-content:center;   
+
+ }
+
  .branches__container{
   background-color: rgb(225, 248, 230);
   width: 30%;
