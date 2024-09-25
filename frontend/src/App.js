@@ -11,12 +11,15 @@ import { MainPage } from "./Components/MainPage.jsx";
 import  NavbarContainer  from "./Components/Navbar.jsx";
 //import { setLogIn, removeLogIn } from './Slices/autorizSlice.js';
 
+
 /*<Route path="/" element={(
   <PrivateRoute>
   <MainForm />
 </PrivateRoute>
 )}/> */
 import { Provider, ErrorBoundary } from '@rollbar/react';
+//import { fastifyStatic,  fastify } from '@rollbar/react';
+//const fastifyStatic = require('@fastify/static');
 
 const rollbarConfig = {
  // accessToken: 'f8272ad6c650422d986a5b04161fb605',
@@ -27,7 +30,6 @@ const rollbarConfig = {
 
 
 function App() {
-
   const dispatch = useDispatch();
  /* 
   useEffect(() => {
