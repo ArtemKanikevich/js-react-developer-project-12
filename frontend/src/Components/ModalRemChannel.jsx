@@ -3,9 +3,11 @@ import { useTranslation } from 'react-i18next';
 import { useSelector, useDispatch } from "react-redux";
 import axios from "axios";
 import  { Button, Modal}  from 'react-bootstrap';
-
+import { Slide, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 import {setChannelsError, setCurrentChannel } from "../Slices/channelsSlice.js";
 import paths from "../routes.js";
+
 
 const ModalRemChannel = (props) => {
     const { t } = useTranslation();
@@ -25,15 +27,37 @@ const ModalRemChannel = (props) => {
             Authorization: `Bearer ${token}`,
           },
         });
-        console.log(`Channel id: ${response.data.id} was deleted `); 
-                
+        //console.log(`Channel id: ${response.data.id} was deleted `);         
         //remove modal
-        props.onHide();        
+        props.onHide(); 
+
+        toast.success(t('toastify_chRem'), {
+          position: "top-center",
+          autoClose: 3000,
+          hideProgressBar: true,
+          closeOnClick: true,
+          pauseOnHover: true,
+          draggable: true,
+          progress: undefined,
+          theme: "light",
+          transition: Slide          
+          });                  
            
       } catch (err) {
         console.error(err);
         dispatch(setChannelsError(err.response ? err.response.statusText +`. `+err.message : err.message));
         //throw err;
+        toast.error(t('toastify_err'), {
+          position: "top-center",
+          autoClose: 3000,
+          hideProgressBar: true,
+          closeOnClick: true,
+          pauseOnHover: true,
+          draggable: true,
+          progress: undefined,
+          theme: "light",
+          transition: Slide          
+          });        
       }
   };
     

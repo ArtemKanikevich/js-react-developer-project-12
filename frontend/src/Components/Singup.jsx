@@ -7,6 +7,7 @@ import * as yup from 'yup';
 import axios from 'axios';
 import  {Form, Card, Stack, Button}  from 'react-bootstrap';
 import { useTranslation } from 'react-i18next';
+import { useNavigate } from 'react-router-dom';
 
 import paths from '../routes.js';
 import { setLogIn, setLogError } from "../Slices/autorizSlice.js";
@@ -28,12 +29,13 @@ export const Singup = () => {
     // Возвращает метод store.dispatch() текущего хранилища
     const dispatch = useDispatch();
     const { t } = useTranslation();
+    const navigate = useNavigate();
     // validation object 
     const schema = yup.object().shape({
       username: yup.string().trim().min(3, t('login_message_1')).
       max(20, t('login_message_2')).required(t('login_message_3')),    
       password: yup.string().required(t('login_message_4')).
-      min(5, t('login_message_5')), 
+      min(6, t('login_message_5')), 
       confirmPassword: yup.string()
       .oneOf([yup.ref('password'), null], t('login_message_7'))
       .required(t('login_message_6')),
@@ -54,15 +56,15 @@ export const Singup = () => {
     const autorizRequest = async (values) => {
       try {
         //get id Token in login request
-        const response = await axios.post(paths.signupPath(),values);
-           
-           console.log(response.data);  
+        const response = await axios.post(paths.signupPath(),values);           
+           //console.log(response.data);  
            localStorage.setItem('userIdToken', response.data.token);  
            localStorage.setItem('userIdName', values.username);  
            //setlogin - true, render
            dispatch(setLogIn()); 
            //error reset
            dispatch(setLogError(""));
+           navigate("/");
         }      
       
       catch (err) {

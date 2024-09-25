@@ -5,9 +5,11 @@ import axios from "axios";
 import { useFormik } from 'formik';
 import * as yup from 'yup';
 import  {Form, Button, Modal}  from 'react-bootstrap';
+import { Slide, toast } from 'react-toastify';
 
 import {setChannelsError, setCurrentChannel } from "../Slices/channelsSlice.js";
 import paths from "../routes.js";
+import { leoFilter }  from "./Navbar.jsx";
 
 
 const ModalNewChannel = (props) => {
@@ -51,8 +53,11 @@ const ModalNewChannel = (props) => {
     },
     validationSchema: schema,    
     onSubmit: (values) => {
-      if (isitnewch === 'true') createNewCh(values.newChannel);
-      if (isitnewch === 'false') renameCh(values.newChannel);
+      //filter
+      const newCh = leoFilter.clean(values.newChannel);
+
+      if (isitnewch === 'true') createNewCh(newCh);
+      if (isitnewch === 'false') renameCh(newCh);
     }   
 
   });       
@@ -73,12 +78,34 @@ const ModalNewChannel = (props) => {
       props.onHide();
       // set current Ch
       dispatch(setCurrentChannel(response.data.id));
+
+      toast.success(t('toastify_new'), {
+        position: "top-center",
+        autoClose: 3000,
+        hideProgressBar: true,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+        theme: "light",
+        transition: Slide        
+        });        
          
     } catch (err) {
       console.error(err);
       dispatch(setChannelsError(err.response ? err.response.statusText +`. `+err.message : err.message));
      // throw err;
-      // show to user !!!!????????
+       toast.error(t('toastify_err'), {
+       position: "top-center",
+       autoClose: 3000,
+       hideProgressBar: true,
+       closeOnClick: true,
+       pauseOnHover: true,
+       draggable: true,
+       progress: undefined,
+       theme: "light",
+       transition: Slide          
+      });        
     }
   };  
 
@@ -95,13 +122,35 @@ const ModalNewChannel = (props) => {
       //inputRef.current.value = ''
       formik.values.newChannel = "";
       //remove modal
-      props.onHide();      
+      props.onHide();
+      
+      toast.success(t('toastify_ren'), {
+        position: "top-center",
+        autoClose: 3000,
+        hideProgressBar: true,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+        theme: "light",
+        transition: Slide        
+        });        
          
     } catch (err) {
       console.error(err);
       dispatch(setChannelsError(err.response ? err.response.statusText +`. `+err.message : err.message));
-     // throw err;
-      // show to user !!!!????????
+     // throw err;      
+      toast.error(t('toastify_err'), {
+        position: "top-center",
+        autoClose: 3000,
+        hideProgressBar: true,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+        theme: "light",
+        transition: Slide          
+        });        
     }
   };  
 

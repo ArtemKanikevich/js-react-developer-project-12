@@ -10,7 +10,7 @@ i18n
         en,
         ru
     },
-    lng: 'en', // язык по умолчанию
+    lng: 'ru', // язык по умолчанию
     keySeparator: false, // используйте точки в ключах переводов
     interpolation: {
       escapeValue: false, // для React не нужно экранировать значения

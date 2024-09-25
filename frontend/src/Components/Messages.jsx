@@ -6,6 +6,8 @@ import { useFormik } from 'formik';
 import  {Container, Row, Col, Card, Form, Button, Spinner, InputGroup}  from 'react-bootstrap';
 import { useTranslation } from 'react-i18next';
 import { uniqueId } from 'lodash' ;
+import { Slide, toast } from 'react-toastify';
+import { leoFilter }  from "./Navbar.jsx";
 import { addMessages, setMessagesError, addMessage, loadMoreItems } from "../Slices/messagesSlice.js";
 import { removeLogIn } from "../Slices/autorizSlice.js";
 import paths from "../routes.js";
@@ -23,6 +25,7 @@ const Messages = () => {
     const[loading, setLoading] = useState(true);
     //infinite scroll
    // const [visibleItems, setVisibleItems] = useState(20); // Изначально показываем 20 элементов
+    //
 
     const messagesArr = useSelector((state) => state.messages.data);
     const { currentCh } = useSelector((state) => state.channels);   
@@ -74,9 +77,8 @@ const Messages = () => {
     useEffect(() => {    
       //Скролл внизу 
       if (listRef.current)        
-        listRef.current.scrollTop = listRef.current.scrollHeight;      
-
-      if (inputRef.current) {       
+        listRef.current.scrollTop = listRef.current.scrollHeight;
+      if (inputRef.current) {             
         inputRef.current.focus(); // Устанавливаем фокус
       }
       setTimeout(() => setLoading(false), 500);      
@@ -85,7 +87,7 @@ const Messages = () => {
         // Эта логика выполнится только при размонтировании компонента
        // console.log("Messages page unmount");
         setLoading(true);        
-        //возвращаем показ 20 элементов
+        //возвращаем показ 50 элементов
         dispatch(loadMoreItems(50));
       };
     }, [messagesArr, currentCh, channelsArr]);    
@@ -100,10 +102,23 @@ const Messages = () => {
             },
           });
           console.log(`New message was sent `, response.data); // =>[{ id: '1', name: 'general', removable: false }, ...]
-          return true;             
+          return true;         
+
         } catch (err) {
           console.error(err);
           dispatch(setMessagesError(err.response ? err.response.statusText +`. `+err.message : err.message));
+           //  throw err;
+          toast.error(t('toastify_err'), {
+            position: "top-center",
+            autoClose: 3000,
+            hideProgressBar: true,
+            closeOnClick: true,
+            pauseOnHover: true,
+            draggable: true,
+            progress: undefined,
+            theme: "light",
+            transition: Slide          
+            });        
           return false;
         //  throw err;
         }
@@ -121,13 +136,15 @@ const Messages = () => {
         message: '', 
       },    
       onSubmit: (values) => {
+        // filter        
+        const message = leoFilter.clean(values.message);
         //insert N auto messages. Type: "/insert-N"
         if (getAmount(values.message)) {
           insertMessages(getAmount(values.message), currentCh, userName, token, setLoading);
          // console.log (pr);
         } 
         //normal sending 
-        else if (sendMessage(values.message)) {
+        else if (sendMessage(message)) {
           // reset input
          // inputRef.current.value = ''
           formik.values.message = "";

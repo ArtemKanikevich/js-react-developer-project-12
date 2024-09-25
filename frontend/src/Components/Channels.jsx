@@ -1,16 +1,14 @@
 import React, { useEffect, useState } from "react";
 import { useTranslation } from 'react-i18next';
 import { useSelector, useDispatch } from "react-redux";
-//import axios from "axios";
-//import { useFormik } from 'formik';
-import  {Container, ListGroup, Dropdown, ButtonGroup, Row, Col, Card, Form, Button, Modal, DropdownButton, InputGroup}  from 'react-bootstrap';
-//import * as yup from 'yup';
+
+import  {Container, ListGroup, Dropdown, ButtonGroup, Row, Col, Card, Form, Button, }  from 'react-bootstrap';
+import { ToastContainer, toast } from 'react-toastify';
+//import 'react-toastify/dist/ReactToastify.css';
+
 import { setCurrentChannel } from "../Slices/channelsSlice.js";
-//import { addMessages, setMessagesError, addMessage } from "../Slices/messagesSlice.js";
-//import paths from "../routes.js";
 import ModalRemChannel from "./ModalRemChannel.jsx";
 import ModalChannel from "./ModalChannel.jsx";
-//import ButtonChannel from "./ButtonChannel.jsx";
 
 
 const Channals = () => {
@@ -41,10 +39,11 @@ const Channals = () => {
             <Button onClick ={() => setModalCh({show: true, newCh: "true"})} variant="success" size="sm">+</Button>
         </div>
 
-        {data.map(elem => (                 
+        <div className="branches__list">
+         {data.map(elem => (                 
           elem.removable ? (
           <Dropdown as={ButtonGroup} key = {`channal-${elem.id}`}
-          onSelect = {(eventKey, e) => showModal(eventKey, elem.id)}>
+          onSelect = {(eventKey, e) => showModal(eventKey, elem.id)} className="branches__toggle">
               <Button  className="w-100 text-start button__channel"
               onClick = {handleClick}  variant={currentCh === elem.id ? "success": "light"} data-as-id = {elem.id}>{`# ${elem.name}`}</Button>
               <Dropdown.Toggle className="button__channel" split  variant={currentCh === elem.id ? "success": "light"} id={`dropdown-split-${elem.id}`}/> 
@@ -56,10 +55,8 @@ const Channals = () => {
           ):
            <Button className="w-100 text-start button__channel"
            key = {`channal-${elem.id}`} onClick = {handleClick} variant={currentCh === elem.id ? "success": "light"} data-as-id = {elem.id}>{`# ${elem.name}`}</Button>
-        ))}    
-
-
-
+        ))}
+        </div>
 
         {ModalCh.show ? (
           <ModalChannel
@@ -76,6 +73,8 @@ const Channals = () => {
           onHide={() => setModalRemCh({show: false, id: "0"})}
           chid = {ModalRemCh.id}/> )    
          : null } 
+
+          <ToastContainer role="alert"/>
         
       </div> 
       ): null 

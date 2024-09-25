@@ -61,7 +61,7 @@
   overflow-y: auto;  
   
   padding-left: 15px;
-  padding-top: 15px;
+  padding-right: 15px;
   height: 100%;
   
   
@@ -69,11 +69,13 @@
 
  .message__input{
   padding-left: 15px;
-  padding-right: 15px;  
+  padding-right: 15px;
+ 
  }
 
  .messages__ul{
   list-style-type: none;
+  padding-right: 15px;  
  }
 
  .branches__title {
@@ -88,10 +90,14 @@
 
  }
 
- .branches__list{
-   display: flex;
-   flex-direction: column;    
-   overflow-y: auto; 
+ .branches__list{  
+   
+   overflow-y:auto;
+   
+ }
+
+ .branches__toggle{
+   width: 100%;
  }
 
  .branches__element{
@@ -101,7 +107,8 @@
  }
 
   .button__channel {
-   border-radius: 0px;   
+   border-radius: 0px;
+  
  }
 
 
