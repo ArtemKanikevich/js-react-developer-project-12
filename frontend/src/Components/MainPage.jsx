@@ -64,7 +64,8 @@ export const MainPage = () => {
       //close spinner
       setLoading(false);      
       //console.log ("Socket start!");
-      const socket = io('http://localhost:5001', {
+      const URL = process.env.SOCKET_SERVER_URL === 'production' ? undefined : 'http://localhost:5001';
+      const socket = io(URL, {
         transports: ['websocket', 'polling'],
         withCredentials: true
       }); 
