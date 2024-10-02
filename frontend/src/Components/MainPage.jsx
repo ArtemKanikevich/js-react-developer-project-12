@@ -4,12 +4,14 @@ import axios from "axios";
 import  {Container, Spinner}  from 'react-bootstrap';
 import { io } from "socket.io-client";
 import { useTranslation } from 'react-i18next';
-import { Slide, toast } from 'react-toastify';
+import { Slide, toast, ToastContainer } from 'react-toastify';
 import { renameChannel, removeChannel, addChannels, addChannel, setChannelsError, setCurrentChannel } from "../Slices/channelsSlice.js";
 import { addMessages, setMessagesError, addMessage } from "../Slices/messagesSlice.js";
 import paths from "../routes.js";
 import Messages from "./Messages.jsx";
 import Channels from "./Channels.jsx";
+import mobileAdapter from "../mobileAdapter.js";
+import toastObj from "../toastObj.js";
 
 //import logo from "../logo.svg";
 
@@ -17,6 +19,7 @@ export const MainPage = () => {
   const dispatch = useDispatch();  
   const { t } = useTranslation();
   const[loading, setLoading] = useState(true);
+  const [forMobile, setForMobile] = useState(false);
   
   useEffect(() => {
     // localStorage.clear("userId");    
@@ -74,17 +77,7 @@ export const MainPage = () => {
       
       socket.on("connect", () => {        
         console.log("Connect: ", socket.connected); // true
-        toast.success(t('toastify_soc'), {
-          position: "top-center",
-          autoClose: 3000,
-          hideProgressBar: true,
-          closeOnClick: true,
-          pauseOnHover: true,
-          draggable: true,
-          progress: undefined,
-          theme: "light",
-          transition: Slide          
-          });                  
+        toast.success(t('toastify_soc'), toastObj);                  
       });
 
       socket.on("disconnect", () => {        
@@ -94,33 +87,13 @@ export const MainPage = () => {
       socket.on("connect_error", (error) => {
         if (socket.active) {
           // temporary failure, the socket will automatically try to reconnect
-          toast.warn(t('toastify_war'), {
-            position: "top-center",
-            autoClose: 3000,
-            hideProgressBar: true,
-            closeOnClick: true,
-            pauseOnHover: true,
-            draggable: true,
-            progress: undefined,
-            theme: "light",
-            transition: Slide          
-            });          
+          toast.warn(t('toastify_war'), toastObj);          
           
         } else {
           // the connection was denied by the server
           // in that case, `socket.connect()` must be manually called in order to reconnect
           console.log(error.message);
-          toast.error(t('toastify_err'), {
-            position: "top-center",
-            autoClose: 3000,
-            hideProgressBar: true,
-            closeOnClick: true,
-            pauseOnHover: true,
-            draggable: true,
-            progress: undefined,
-            theme: "light",
-            transition: Slide          
-            });        
+          toast.error(t('toastify_err'), toastObj);        
         }
       });
 
@@ -151,23 +124,18 @@ export const MainPage = () => {
     
 
     Promise.all([getChannels(token), getMessages(token)]).then(() => socketV = socketConnect()).catch((err) => 
-      toast.error(t('toastify_err'), {
-        position: "top-center",
-        autoClose: 3000,
-        hideProgressBar: true,
-        closeOnClick: true,
-        pauseOnHover: true,
-        draggable: true,
-        progress: undefined,
-        theme: "light",
-        transition: Slide          
-        }));
+    toast.error(t('toastify_err'), toastObj));
     //.then((socket)=> socketV = socket);
+    const resizeReset = mobileAdapter(setForMobile);
     
     return () => {
       // Эта логика выполнится только при размонтировании компонента
       console.log("Main Page unmount");      
       socketV.disconnect();
+      resizeReset();
+      //create 
+      localStorage.setItem('maxIdChArr', "maXIdArr"); 
+
     };
     //dispatch(setLogIn());
     //only in first render []
@@ -183,9 +151,10 @@ export const MainPage = () => {
             </Spinner> 
            </div>
            ):
-         <>  
-         <Channels/>
-         <Messages/>
+         <>        
+         {forMobile || <Channels inOffCanvas = {false}/> } 
+         <Messages forMobile = {forMobile}/>
+         <ToastContainer role="alert"/>
          </>
         }
       </div>     
@@ -195,42 +164,7 @@ export const MainPage = () => {
 }; 
 
 /*
- <Container className="vh-100" >
-      <Row className="vh-100">
-        <Col className= "custom-elem2" d-flex align-items-start justify-content-center xs={6} md={3}>          
-        </Col>
-        <Col >
-       
-        <Card>
-          <Card.Header as="h5">#Chanal_name</Card.Header>
-             <Card.Body>                
-                <Card.Text>
-                  X Messages
-                </Card.Text>              
-            </Card.Body>
-         </Card>
-            
-        </Col>
-      </Row>
-    </Container>
+ 
 -------------
-<Container >
-        <Row> 
-          <Col xs={6} md={3}>
-            <div className="custom-elem">Column 11</div>
-          </Col>
-          <Col>
-             <div className=" custom-elem">Column 12</div>
-          </Col>
-        </Row>    
-        <Row >
-          <Col xs={6} md={3}>
-            <div className="custom-elem">Column 21</div>
-          </Col>
-          <Col>
-             <div className=" custom-elem">Column 22</div>
-          </Col>
-        </Row>           
-                
-      </Container>
+
 */

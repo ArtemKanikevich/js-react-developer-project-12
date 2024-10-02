@@ -10,6 +10,7 @@ import { Slide, toast } from 'react-toastify';
 import {setChannelsError, setCurrentChannel } from "../Slices/channelsSlice.js";
 import paths from "../routes.js";
 import { leoFilter }  from "./Navbar.jsx";
+import toastObj from "../toastObj.js";
 
 
 const ModalNewChannel = (props) => {
@@ -79,33 +80,13 @@ const ModalNewChannel = (props) => {
       // set current Ch
       dispatch(setCurrentChannel(response.data.id));
 
-      toast.success(t('toastify_new'), {
-        position: "top-center",
-        autoClose: 3000,
-        hideProgressBar: true,
-        closeOnClick: true,
-        pauseOnHover: true,
-        draggable: true,
-        progress: undefined,
-        theme: "light",
-        transition: Slide        
-        });        
+      toast.success(t('toastify_new'), toastObj);        
          
     } catch (err) {
       console.error(err);
       dispatch(setChannelsError(err.response ? err.response.statusText +`. `+err.message : err.message));
      // throw err;
-       toast.error(t('toastify_err'), {
-       position: "top-center",
-       autoClose: 3000,
-       hideProgressBar: true,
-       closeOnClick: true,
-       pauseOnHover: true,
-       draggable: true,
-       progress: undefined,
-       theme: "light",
-       transition: Slide          
-      });        
+       toast.error(t('toastify_err'), toastObj);        
     }
   };  
 
@@ -124,33 +105,13 @@ const ModalNewChannel = (props) => {
       //remove modal
       props.onHide();
       
-      toast.success(t('toastify_ren'), {
-        position: "top-center",
-        autoClose: 3000,
-        hideProgressBar: true,
-        closeOnClick: true,
-        pauseOnHover: true,
-        draggable: true,
-        progress: undefined,
-        theme: "light",
-        transition: Slide        
-        });        
+      toast.success(t('toastify_ren'), toastObj);        
          
     } catch (err) {
       console.error(err);
       dispatch(setChannelsError(err.response ? err.response.statusText +`. `+err.message : err.message));
      // throw err;      
-      toast.error(t('toastify_err'), {
-        position: "top-center",
-        autoClose: 3000,
-        hideProgressBar: true,
-        closeOnClick: true,
-        pauseOnHover: true,
-        draggable: true,
-        progress: undefined,
-        theme: "light",
-        transition: Slide          
-        });        
+      toast.error(t('toastify_err'), toastObj);        
     }
   };  
 

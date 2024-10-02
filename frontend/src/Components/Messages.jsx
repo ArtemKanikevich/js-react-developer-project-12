@@ -12,9 +12,9 @@ import { addMessages, setMessagesError, addMessage, loadMoreItems } from "../Sli
 import { removeLogIn } from "../Slices/autorizSlice.js";
 import paths from "../routes.js";
 import {getAmount, insertMessages} from "../addmessages.js";
+import toastObj from "../toastObj.js";
 
-
-const Messages = () => {
+const Messages = (props) => {
    // const [text, setText] = useState("");
     const { t } = useTranslation();
     const inputRef = useRef(null);
@@ -23,22 +23,26 @@ const Messages = () => {
     const navigate = useNavigate();
     //spiner
     const[loading, setLoading] = useState(true);
-    //infinite scroll
+    const { forMobile } = props;
    // const [visibleItems, setVisibleItems] = useState(20); // Изначально показываем 20 элементов
     //
-
+   
     const messagesArr = useSelector((state) => state.messages.data);
     const { currentCh } = useSelector((state) => state.channels);   
-    const channelsArr =  useSelector((state) => state.channels.data);  
+    const channelsArr =  useSelector((state) => state.channels.data); 
+     //infinite scroll 
     const visibleItems =  useSelector((state) => state.messages.visibleItems); 
     const token = localStorage.getItem("userIdToken");   
     const userName =  localStorage.getItem("userIdName");
     let mesAmount = 0;
+    let classNameCont ="";
 
     //пропускаем перв. рендер  
     if (messagesArr != undefined && channelsArr != undefined ) 
       mesAmount = messagesArr.reduce((acc,cur)=> cur.channelId === currentCh ? acc + 1 : acc, 0);
-    
+    //mobile adaptor class
+    if (forMobile) classNameCont = "container-mobile messages messages__container";
+    else classNameCont = "messages messages__container";        
     //console.log("visibleItems :",visibleItems);
     //infinite scroll    
     const handleScroll = () => {   
@@ -101,24 +105,14 @@ const Messages = () => {
               Authorization: `Bearer ${token}`,
             },
           });
-          console.log(`New message was sent `, response.data); // =>[{ id: '1', name: 'general', removable: false }, ...]
+          console.log(`New message was sent `, response.data); // 
           return true;         
 
         } catch (err) {
           console.error(err);
           dispatch(setMessagesError(err.response ? err.response.statusText +`. `+err.message : err.message));
            //  throw err;
-          toast.error(t('toastify_err'), {
-            position: "top-center",
-            autoClose: 3000,
-            hideProgressBar: true,
-            closeOnClick: true,
-            pauseOnHover: true,
-            draggable: true,
-            progress: undefined,
-            theme: "light",
-            transition: Slide          
-            });        
+          toast.error(t('toastify_err'), toastObj);        
           return false;
         //  throw err;
         }
@@ -157,7 +151,7 @@ const Messages = () => {
     return (
     //пропускаем перв. рендер  
     messagesArr != undefined && channelsArr != undefined ? (  
-    <div className="messages messages__container">        
+    <div className= {classNameCont}>        
        <div className="messages__active-chanal">                
           <div className="messages__active-chanal-name">
            <b># {channelsArr.find (elem => elem.id === currentCh).name}</b><br/>
@@ -169,8 +163,11 @@ const Messages = () => {
             <span className="visually-hidden">Loading...</span>
           </Spinner> }
           
-          <div>                   
-           <a onClick = {exitClick} href="#"className='navbar__icons'><i className="fi fi-rr-exit icon_home"></i></a> 
+
+          <div className="icon__container">                   
+            <a onClick = {exitClick} href="#"className='navbar__icons'>
+              <i className="fi fi-rr-exit icon_size"></i>
+            </a> 
           </div>
        </div>
 

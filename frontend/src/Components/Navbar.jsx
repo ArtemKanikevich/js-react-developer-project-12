@@ -1,10 +1,12 @@
-import React, { useEffect } from 'react';
-import { Navbar, ButtonGroup, ToggleButton, Container, Button } from 'react-bootstrap';
+import React, { useEffect, useState } from 'react';
+import { Navbar, ButtonGroup, ToggleButton, Container, Button, Offcanvas } from 'react-bootstrap';
 import { useTranslation } from 'react-i18next';
-import { useState } from 'react';
 import  leoProf  from "leo-profanity";
 //import { FlaticonIcon } from '@flaticon/flaticon-uicons';
 import '@flaticon/flaticon-uicons/css/all/all.css';
+import mobileAdapter from "../mobileAdapter.js";
+import Channels from "./Channels.jsx";
+
 
 function LngButtons() { 
   const { t, i18n } = useTranslation();
@@ -16,8 +18,8 @@ function LngButtons() {
   },[]);  
 
   const radios = [
-    { name: t('leng_en'), value: 'en' },
-    { name: t('leng_ru'), value: 'ru' },    
+    { name: 'en', value: 'en' },
+    { name: 'ру', value: 'ru' },    
   ];
 
   return (
@@ -43,20 +45,57 @@ function LngButtons() {
         ))}
       </ButtonGroup>
   );
-}  
+}
 
 
-const NavbarContainer = () => { 
+const NavbarContainer = () => {
+
+  const [forMobile, setForMobile] = useState(false);
+  const [showOffCanvas, setShowOffCanvas] = useState(false);
+
+  const openOffCanvas = () => {
+   setShowOffCanvas(true);
+  }
+  
+  const closeOffCanvas = () => {
+   setShowOffCanvas(false); 
+  }
+    
+  useEffect(() => {    
+    const resizeReset = mobileAdapter(setForMobile);
+   //console.log("mobile ", forMobile);
+    return resizeReset;
+  },[]);  
 
     return (
       <>   
       <Navbar expand="sm" bg="light" className="bg-body-tertiary" data-bs-theme="light">
         <Container>
-          <Navbar.Brand href="/">Slack Chat</Navbar.Brand>            
-                 
+          <div className="brand__container">
+            <Navbar.Brand href="/">Slack Chat</Navbar.Brand>
+            { forMobile &&
+            <div className="icon__container">                   
+             <a onClick = {openOffCanvas} href="#"className='navbar__icons'>       
+                <i className= "fi fi-sr-menu-burger icon_size"></i>
+              </a>
+            </div>
+            }
+            { forMobile &&
+            <div className="icon__container">
+               <i className="fi fi-rr-comment message__icons"></i>
+            </div>  
+            }
+            
+          </div>
           <LngButtons/>                    
         </Container>
       </Navbar>
+
+    
+      <Offcanvas show={showOffCanvas} onHide={closeOffCanvas} className="custom-offcanvas"> 
+         <Channels inOffCanvas = {showOffCanvas}/>
+      </Offcanvas>
+     
       <br />
       </>
     );
@@ -67,3 +106,19 @@ const NavbarContainer = () => {
 
   //<Button variant="secondary" size="sm">
   //<Navbar.Collapse className="justify-content-end"></Navbar.Collapse>
+
+ /* 
+ <Navbar.Toggle aria-controls={`offcanvasNavbar-expand`}/> 
+          <Navbar.Offcanvas
+              id={`offcanvasNavbar-expand`}
+              aria-labelledby={`offcanvasNavbarLabel-expand`}
+              placement="end"
+            >
+                 
+            <Offcanvas.Header closeButton>
+                <Offcanvas.Title id={`offcanvasNavbarLabel-expand`}>
+                  Offcanvas
+                </Offcanvas.Title>
+            </Offcanvas.Header>
+          </Navbar.Offcanvas>     
+*/

@@ -2,7 +2,7 @@ import { configureStore } from "@reduxjs/toolkit";
 import autorizReducer from "./autorizSlice.js";
 import channelsReducer from "./channelsSlice.js";
 import messagesReducer from "./messagesSlice.js";
-import { getNewData } from "./middlewares.js";
+import { setUnreadCh } from "./middlewares.js";
 
 export default configureStore({
   reducer: {
@@ -12,6 +12,6 @@ export default configureStore({
     messages: messagesReducer,
   },
 
-  //middleware: (getDefaultMiddleware) =>
-   // getDefaultMiddleware().concat([getNewData]),
+  middleware: (getDefaultMiddleware) =>
+    getDefaultMiddleware().concat([setUnreadCh]),
 });

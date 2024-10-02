@@ -3,26 +3,32 @@ import { useTranslation } from 'react-i18next';
 import { useSelector, useDispatch } from "react-redux";
 
 import  {Container, ListGroup, Dropdown, ButtonGroup, Row, Col, Card, Form, Button, }  from 'react-bootstrap';
-import { ToastContainer, toast } from 'react-toastify';
 //import 'react-toastify/dist/ReactToastify.css';
 
-import { setCurrentChannel } from "../Slices/channelsSlice.js";
+import { setCurrentChannel, removeFromUnRead } from "../Slices/channelsSlice.js";
 import ModalRemChannel from "./ModalRemChannel.jsx";
 import ModalChannel from "./ModalChannel.jsx";
 
 
-const Channals = () => {
+const Channals = (props) => {
     const { t } = useTranslation();
     const dispatch = useDispatch();
     const [ModalCh, setModalCh] = useState({show: false, id: "0", newCh: "false"});
     const [ModalRemCh, setModalRemCh] = useState({show: false, id: "0"});
    // const [ModalRenCh, setModalRenCh] = useState({show: false, id: 0});
     const { data, currentCh } = useSelector((state) => state.channels);
+    const { inOffCanvas } = props;
+
+    //for mobile Class
+    let classNameCont = "";
+    if (inOffCanvas) classNameCont = "container-mobile branches branches__container";
+    else classNameCont = "branches branches__container";  
 
    //change channel
     const handleClick = (e) => {
        // console.dir(e.target.dataset.asId);
         dispatch(setCurrentChannel(e.target.dataset.asId));
+        dispatch(removeFromUnRead(e.target.dataset.asId));
     }  
 
     const showModal = (eventKey, id) => {
@@ -32,7 +38,7 @@ const Channals = () => {
 
     return(
       data != undefined ? (  
-       <div className="branches branches__container">
+       <div className={ classNameCont }>
 
         <div className="branches__title">
             {t('channels')}
@@ -44,8 +50,10 @@ const Channals = () => {
           elem.removable ? (
           <Dropdown as={ButtonGroup} key = {`channal-${elem.id}`}
           onSelect = {(eventKey, e) => showModal(eventKey, elem.id)} className="branches__toggle">
+
               <Button  className="w-100 text-start button__channel"
-              onClick = {handleClick}  variant={currentCh === elem.id ? "success": "light"} data-as-id = {elem.id}>{`# ${elem.name}`}</Button>
+              onClick = {handleClick}  variant={currentCh === elem.id ? "success": "light"} data-as-id = {elem.id}>{`# ${elem.name}`} <i className="fi fi-rr-comment message__icons_sm"></i></Button>
+
               <Dropdown.Toggle className="button__channel" split  variant={currentCh === elem.id ? "success": "light"} id={`dropdown-split-${elem.id}`}/> 
               <Dropdown.Menu>
                 <Dropdown.Item eventKey ="1">{t("rename")}</Dropdown.Item>
@@ -54,7 +62,7 @@ const Channals = () => {
           </Dropdown>
           ):
            <Button className="w-100 text-start button__channel"
-           key = {`channal-${elem.id}`} onClick = {handleClick} variant={currentCh === elem.id ? "success": "light"} data-as-id = {elem.id}>{`# ${elem.name}`}</Button>
+           key = {`channal-${elem.id}`} onClick = {handleClick} variant={currentCh === elem.id ? "success": "light"} data-as-id = {elem.id}>{`# ${elem.name}`} <i className="fi fi-rr-comment message__icons_sm"></i></Button>
         ))}
         </div>
 
@@ -72,9 +80,7 @@ const Channals = () => {
           show={ModalRemCh.show}
           onHide={() => setModalRemCh({show: false, id: "0"})}
           chid = {ModalRemCh.id}/> )    
-         : null } 
-
-          <ToastContainer role="alert"/>
+         : null }           
         
       </div> 
       ): null 
