@@ -16,8 +16,8 @@ const Channals = (props) => {
     const [ModalCh, setModalCh] = useState({show: false, id: "0", newCh: "false"});
     const [ModalRemCh, setModalRemCh] = useState({show: false, id: "0"});
    // const [ModalRenCh, setModalRenCh] = useState({show: false, id: 0});
-    const { data, currentCh } = useSelector((state) => state.channels);
-    const { inOffCanvas } = props;
+    const { data, currentCh, unRead } = useSelector((state) => state.channels);
+    const { inOffCanvas, hideOffCanvas } = props;
 
     //for mobile Class
     let classNameCont = "";
@@ -26,15 +26,20 @@ const Channals = (props) => {
 
    //change channel
     const handleClick = (e) => {
-       // console.dir(e.target.dataset.asId);
         dispatch(setCurrentChannel(e.target.dataset.asId));
         dispatch(removeFromUnRead(e.target.dataset.asId));
+        if (inOffCanvas) hideOffCanvas();
     }  
 
     const showModal = (eventKey, id) => {
       if (eventKey ==="1") setModalCh({show: true, id, newCh: "false"});
       if (eventKey ==="2") setModalRemCh({show: true, id});
-    };      
+    }; 
+    
+    //save unRead to storage
+    useEffect (() => {
+      localStorage.setItem('unRead', JSON.stringify(unRead));
+    });
 
     return(
       data != undefined ? (  
@@ -52,7 +57,11 @@ const Channals = (props) => {
           onSelect = {(eventKey, e) => showModal(eventKey, elem.id)} className="branches__toggle">
 
               <Button  className="w-100 text-start button__channel"
-              onClick = {handleClick}  variant={currentCh === elem.id ? "success": "light"} data-as-id = {elem.id}>{`# ${elem.name}`} <i className="fi fi-rr-comment message__icons_sm"></i></Button>
+              onClick = {handleClick}  variant={currentCh === elem.id ? "success": "light"} data-as-id = {elem.id}>{`# ${elem.name} `} 
+
+              {unRead.find(chId => chId === elem.id) && (
+              <i className="fi fi-rr-comment message__icons_sm"></i>)}
+              </Button>
 
               <Dropdown.Toggle className="button__channel" split  variant={currentCh === elem.id ? "success": "light"} id={`dropdown-split-${elem.id}`}/> 
               <Dropdown.Menu>
@@ -62,7 +71,11 @@ const Channals = (props) => {
           </Dropdown>
           ):
            <Button className="w-100 text-start button__channel"
-           key = {`channal-${elem.id}`} onClick = {handleClick} variant={currentCh === elem.id ? "success": "light"} data-as-id = {elem.id}>{`# ${elem.name}`} <i className="fi fi-rr-comment message__icons_sm"></i></Button>
+           key = {`channal-${elem.id}`} onClick = {handleClick} variant={currentCh === elem.id ? "success": "light"} data-as-id = {elem.id}>{`# ${elem.name} `} 
+
+           {unRead.find(chId => chId === elem.id) && (
+            <i className="fi fi-rr-comment message__icons_sm"></i>)}          
+           </Button>
         ))}
         </div>
 
@@ -90,7 +103,10 @@ const Channals = (props) => {
 
 export default Channals;
 
-/* list with channals!!!
+/* 
+<i className="fi fi-rr-comment message__icons_sm"></i>
+
+list with channals!!!
 <div className="branches__list">
 <ListGroup variant="flush">
   {data.map(elem => (               

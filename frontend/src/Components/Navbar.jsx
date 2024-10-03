@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from 'react';
+import { useSelector, useDispatch } from "react-redux";
 import { Navbar, ButtonGroup, ToggleButton, Container, Button, Offcanvas } from 'react-bootstrap';
 import { useTranslation } from 'react-i18next';
 import  leoProf  from "leo-profanity";
@@ -9,10 +10,10 @@ import Channels from "./Channels.jsx";
 
 
 function LngButtons() { 
-  const { t, i18n } = useTranslation();
+  const { i18n } = useTranslation();
   //i18n.changeLanguage("ru");
-  const [radioValue, setRadioValue] = useState('ru');
-
+  const [radioValue, setRadioValue] = useState('ru'); 
+  
   useEffect(() => {
     leoProf.loadDictionary("ru");
   },[]);  
@@ -52,6 +53,9 @@ const NavbarContainer = () => {
 
   const [forMobile, setForMobile] = useState(false);
   const [showOffCanvas, setShowOffCanvas] = useState(false);
+  const { unRead } = useSelector((state) => state.channels);
+  const { logIn } = useSelector((state) => state.auth);
+
 
   const openOffCanvas = () => {
    setShowOffCanvas(true);
@@ -73,16 +77,16 @@ const NavbarContainer = () => {
         <Container>
           <div className="brand__container">
             <Navbar.Brand href="/">Slack Chat</Navbar.Brand>
-            { forMobile &&
+            { forMobile && logIn &&
             <div className="icon__container">                   
              <a onClick = {openOffCanvas} href="#"className='navbar__icons'>       
                 <i className= "fi fi-sr-menu-burger icon_size"></i>
               </a>
             </div>
             }
-            { forMobile &&
+            { forMobile && logIn &&
             <div className="icon__container">
-               <i className="fi fi-rr-comment message__icons"></i>
+              {unRead.length > 0 && <i className="fi fi-rr-comment message__icons"></i>}
             </div>  
             }
             
@@ -93,7 +97,7 @@ const NavbarContainer = () => {
 
     
       <Offcanvas show={showOffCanvas} onHide={closeOffCanvas} className="custom-offcanvas"> 
-         <Channels inOffCanvas = {showOffCanvas}/>
+         <Channels inOffCanvas = {showOffCanvas} hideOffCanvas = {closeOffCanvas}/>
       </Offcanvas>
      
       <br />

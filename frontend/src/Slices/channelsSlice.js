@@ -30,10 +30,7 @@ const channelsSlice = createSlice({
        removeChannel: (state, action) => {
         const chId = action.payload.id;
         state.data = state.data.filter(ch => ch.id != chId); 
-       
-        //reload maxIdChArr
-
-        //
+              
        },
        renameChannel: (state, action) => {
         state.data = state.data.map(elem => elem.id === action.payload.id ? elem = action.payload : elem)

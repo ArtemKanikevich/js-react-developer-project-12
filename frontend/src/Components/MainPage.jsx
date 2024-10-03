@@ -133,9 +133,7 @@ export const MainPage = () => {
       console.log("Main Page unmount");      
       socketV.disconnect();
       resizeReset();
-      //create 
-      localStorage.setItem('maxIdChArr', "maXIdArr"); 
-
+      
     };
     //dispatch(setLogIn());
     //only in first render []
@@ -166,5 +164,5 @@ export const MainPage = () => {
 /*
  
 -------------
-
+ <Messages forMobile = {forMobile}/>
 */

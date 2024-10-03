@@ -6,18 +6,17 @@ export const setUnreadCh = (store) => (next) => (action) => {
     if (action.type === 'messages/addMessage') {     
      // Test
     // action.payload.channelId = "2";
-
-     const newChId = action.payload.channelId;
-     const newMesId = action.payload.id;
-  
+     let newChId = action.payload.channelId;
+     const newMesId = action.payload.id;  
        // test !!!
       // mesArr.push({body: "XXX", channelId: "2", username: "admin", removable: true,
-     // id: "67" });
+     // id: "21" });
+     //newChId = "17";
      
      //reload maxIdChArr
      let maxIdChArr = JSON.parse(localStorage.getItem("maxIdChArr"));
      console.log("maxIdChArr", maxIdChArr);
-
+    //refresh maxIdChArr
      if (maxIdChArr) {
       //find chId in maxIdChArr
        const curObj = maxIdChArr.find(elem => elem.chId === newChId)
@@ -30,10 +29,10 @@ export const setUnreadCh = (store) => (next) => (action) => {
       //save to local storage
       localStorage.setItem('maxIdChArr', JSON.stringify(maxIdChArr));
              
-     //check is't curent ch      
+     //refresh unRead //check is't curent ch      
      if (state.channels.currentCh != newChId) {
       //find the same chId
-        if( !state.channels.unRead.find(elem => elem === newChId))
+        if( !state.channels.unRead.find(id => id === newChId))
          //add new Chid to store
           store.dispatch(addUnRead(newChId));
          //save to local storage in render
@@ -43,45 +42,63 @@ export const setUnreadCh = (store) => (next) => (action) => {
     // add in unReadArr during app load 
     if (action.type === 'messages/addMessages') {
       // arr : [{chId: X, maxMesId: Y}}
-      const maxIdChArr = JSON.parse(localStorage.getItem("maxIdChArr"));
-      const mesArr = action.payload;   
-          
-       // is't new load
-        if (maxIdChArr) {   
-          // find new messages    
+        let maxIdChArr = JSON.parse(localStorage.getItem("maxIdChArr"));
+        const unRead = JSON.parse(localStorage.getItem("unRead"));
+        const mesArr = action.payload;
+        const curCh = state.channels.currentCh;
+        console.log("unRead: ",unRead);
+        console.log("curCh:", curCh);   
+
+      // test !!!
+     //  mesArr.push({body: "PROV", channelId: "14", username: "admin", removable: true,
+     // id: "26" });
+
+      //take UnRead from local storage
+      //  if (unRead) store.dispatch(addUnRead_am(unRead));               
+       //  1) is't new load
+        if (maxIdChArr) {          
+          //refresh unRead // find new messages        
           maxIdChArr.forEach(elem => 
           {   
-            if(mesArr.find(mesObj => elem.chId === mesObj.channelId &&
-            mesObj.id > elem.maxId)) 
              //check is"t curent ch ?    
-             if (state.channels.currentCh != elem.chId) {
+            if (curCh != elem.chId) 
+            {
+              if(mesArr.find(mesObj => (elem.chId === mesObj.channelId) &&
+              (mesObj.id > elem.maxId))) 
+             {            
               //add new chId to store
-              if( !state.channels.unRead.find(elem => elem === elem.chId))
-                store.dispatch(addUnRead(elem.chId));
-             }                    
+              if( !state.channels.unRead.find(id => id === elem.chId))                 
+                store.dispatch(addUnRead(elem.chId));              
+             }   
+            }                  
           });
-          //find new ch
+          //find message in new ch
           mesArr.forEach(mesObj => 
           { 
            if( !maxIdChArr.find(elem => elem.chId === mesObj.channelId))
               //add new chId to store         
-             if( !state.channels.unRead.find(elem => elem === mesObj.channelId))
+             if( !state.channels.unRead.find(id => id === mesObj.channelId)) {
+               //console.log("mesObj.channelId", mesObj.channelId);
+              // console.log("maxIdChArr", maxIdChArr);
                 store.dispatch(addUnRead(mesObj.channelId));
+             }  
            
-          });         
-        } 
-        else {  //  new load
-           //all channels if we have messages (New load)
-          if (mesArr) 
-          {
-            const tempArr = mesArr.map(mesObj => mesObj.channelId);
-            const uniqueArr = [...new Set(tempArr)];
-            console.log(uniqueArr);
-            // add all chId to store
-            store.dispatch(addUnRead_am(uniqueArr));
-
-            //create maxIdChArr
-            const maxIdChArr = uniqueArr.map(chId => {
+          });   
+                  
+        }         
+         // reload maxIdChArr   
+        if (mesArr) 
+          {            
+            const tempArr = mesArr.map(mesObj =>  mesObj.channelId);
+            //без дублей 
+            const uniqueArr = [...new Set(tempArr)]; 
+            //без curCh
+            const unReadArr = uniqueArr.filter(elem => elem != curCh);         
+             // 2) new load - add all chId to store
+            if(!maxIdChArr) 
+              store.dispatch(addUnRead_am(unReadArr));
+           
+              maxIdChArr = uniqueArr.map(chId => {
               let maxId = 0; 
               mesArr.forEach(mesObj => { 
                 if ((mesObj.channelId === chId) && (Number(mesObj.id) > maxId))
@@ -90,11 +107,11 @@ export const setUnreadCh = (store) => (next) => (action) => {
               return { chId, maxId }; 
             });
            //console.log(maxIdChArr);
-           localStorage.setItem('maxIdChArr', JSON.stringify(maxIdChArr));
-           
-          }
-        }     
+           localStorage.setItem('maxIdChArr', JSON.stringify(maxIdChArr));           
+          }            
     }
+
+    //add remove ch !!!!!!!!!
   
     return next(action);
   };

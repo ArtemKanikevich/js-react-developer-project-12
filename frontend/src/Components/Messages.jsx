@@ -22,10 +22,10 @@ const Messages = (props) => {
     const dispatch = useDispatch();
     const navigate = useNavigate();
     //spiner
-    const[loading, setLoading] = useState(true);
+    const[loading, setLoading] = useState(false);
     const { forMobile } = props;
    // const [visibleItems, setVisibleItems] = useState(20); // Изначально показываем 20 элементов
-    //
+    //    
    
     const messagesArr = useSelector((state) => state.messages.data);
     const { currentCh } = useSelector((state) => state.channels);   
@@ -90,7 +90,7 @@ const Messages = (props) => {
       return () => {
         // Эта логика выполнится только при размонтировании компонента
        // console.log("Messages page unmount");
-        setLoading(true);        
+        setLoading(false);        
         //возвращаем показ 50 элементов
         dispatch(loadMoreItems(50));
       };
@@ -119,7 +119,7 @@ const Messages = (props) => {
       };
 
     const exitClick = () => {
-      localStorage.clear();
+      window.localStorage.clear();
       dispatch(removeLogIn());
       navigate("/");
     }
