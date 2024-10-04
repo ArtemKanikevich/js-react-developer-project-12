@@ -11,7 +11,7 @@ import { useTranslation } from 'react-i18next';
 
 import paths from '../routes.js';
 import { setLogIn, setLogError } from "../Slices/autorizSlice.js";
-
+import AuthError from "./AuthError.jsx";
 
 /*fields - объект с ключами полей userName, password.  
 const validate = (fields) => {
@@ -39,16 +39,7 @@ export const LogInForm = () => {
       min(5, t('login_message_5')), 
     });    
     //render error from state.auth
-    const ShowAuthError = () => {
-      const err = useSelector((state) => state.auth.error);
-      if (err === "") return;
-      return (
-        <>
-        <br />
-        <div style = {{color: 'red'}}>{t('error') + err}</div>
-        </>
-      )
-    };
+    
 
     const autorizRequest = async (values) => {
       try {
@@ -63,13 +54,13 @@ export const LogInForm = () => {
            dispatch(setLogError(""));
         }
         else dispatch(setLogError(t('tokenErr')));          
-        console.log(localStorage);        
+       // console.log(localStorage);        
         
       }
       catch (err) {
         console.error (err);
         // save error in state
-        dispatch(setLogError(err.response ? err.response.statusText +`. `+err.message : err.message));
+        dispatch(setLogError(err.code));
       }
     };
 
@@ -87,7 +78,7 @@ export const LogInForm = () => {
 
     const singupClick =(e) =>{
       navigate("/singup");
-     // console.log("signUp");
+      dispatch(setLogError(""));
     }
 
     return (  
@@ -140,7 +131,7 @@ export const LogInForm = () => {
           <Button variant="outline-secondary" onClick={singupClick}>{t('sing_up')}</Button>
         </Stack> 
        
-        <ShowAuthError/>  
+        <AuthError/>  
 
         </Form> 
        </Card.Body>

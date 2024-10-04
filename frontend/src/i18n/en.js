@@ -8,6 +8,7 @@ const en = {
         conf_password: "Confirm password",
         create_user: "Create user",
         user_name: 'User name',
+        user_name_sing: 'User name',
         password: 'Password',
         leng_ru: 'ru',
         leng_en: 'en',
@@ -20,7 +21,7 @@ const en = {
         login_message_5: 'Password must be at least 6 characters long',
         login_message_6: 'Confirm Password is required',
         login_message_7: 'Passwords must match',
-        error: 'Error ! ',
+        auth_error: 'Wrong user name or password ! ',
         tokenErr: "Token is incorrect!", 
 
         channels: "Channels",

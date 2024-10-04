@@ -11,6 +11,7 @@ import { useNavigate } from 'react-router-dom';
 
 import paths from '../routes.js';
 import { setLogIn, setLogError } from "../Slices/autorizSlice.js";
+import AuthError from "./AuthError.jsx";
 
 /*fields - объект с ключами полей userName, password.  
 const validate = (fields) => {
@@ -40,18 +41,8 @@ export const Singup = () => {
       .oneOf([yup.ref('password'), null], t('login_message_7'))
       .required(t('login_message_6')),
 
-    });    
-    //render error from state.auth
-    const ShowAuthError = () => {
-      const err = useSelector((state) => state.auth.error);
-      if (err === "") return;
-      return (
-        <>
-        <br />
-        <div style = {{color: 'red'}}>{t('error') + err}</div>
-        </>
-      )
-    };
+    });       
+   
 
     const autorizRequest = async (values) => {
       try {
@@ -70,7 +61,7 @@ export const Singup = () => {
       catch (err) {
         console.error (err);
         // save error in state
-        dispatch(setLogError(err.response ? err.response.statusText +`. `+err.message : err.message));
+        dispatch(setLogError(err.code));
       }
     };
 
@@ -99,7 +90,7 @@ export const Singup = () => {
       <Form onSubmit={formik.handleSubmit}>
 
         <Form.Group className="mb-3" controlId="FormLogin.username">
-         <Form.Label >{t('user_name')}</Form.Label>
+         <Form.Label >{t('user_name_sing')}</Form.Label>
           <Form.Control
            //id="username"
            name="username"
@@ -157,7 +148,7 @@ export const Singup = () => {
           <Button variant="success" type="submit">{t('create_user')}</Button>
         </div>       
        
-        <ShowAuthError/>  
+        <AuthError/>  
 
         </Form> 
        </Card.Body>

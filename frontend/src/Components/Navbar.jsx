@@ -68,7 +68,7 @@ const NavbarContainer = () => {
       <>   
       <Navbar expand="sm" bg="light" className="bg-body-tertiary" data-bs-theme="light">
         <Container>
-          <Navbar.Brand href='/'>Slack Chat</Navbar.Brand>            
+          <Navbar.Brand href='/'>Hexlet Chat</Navbar.Brand>            
 
         <div className='navbar__container'>      
           { logIn && <div>                   
