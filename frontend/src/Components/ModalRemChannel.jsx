@@ -12,8 +12,7 @@ import paths from "../routes.js";
 const ModalRemChannel = (props) => {
     const { t } = useTranslation();
     const dispatch = useDispatch();
-    const { chid } = props;
-      
+    const { chid } = props;      
 
     const token = localStorage.getItem("userIdToken"); 
     //const [error, setError] = useState(false);
@@ -41,7 +40,7 @@ const ModalRemChannel = (props) => {
           progress: undefined,
           theme: "light",
           transition: Slide          
-          });                  
+          });           
            
       } catch (err) {
         console.error(err);
@@ -57,7 +56,7 @@ const ModalRemChannel = (props) => {
           progress: undefined,
           theme: "light",
           transition: Slide          
-          });        
+          });          
       }
   };
     

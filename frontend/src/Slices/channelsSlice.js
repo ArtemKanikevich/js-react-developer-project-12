@@ -1,9 +1,10 @@
 import { createSlice } from '@reduxjs/toolkit';
+import initialSt from "../initialSt.js";
 
 // Начальное значение
 const initialState = {
      //set current chanal  = 1
-     currentCh: "1"
+     currentCh: initialSt.currentCh
 };
 
 const channelsSlice = createSlice({
@@ -33,7 +34,8 @@ const channelsSlice = createSlice({
        },
        renameChannel: (state, action) => {
         state.data = state.data.map(elem => elem.id === action.payload.id ? elem = action.payload : elem)
-       }  
+       }
+         
     
     }
 });       

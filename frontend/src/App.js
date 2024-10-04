@@ -10,27 +10,34 @@ import  PageNotFound from "./Components/PageNotFound.jsx";
 import { MainPage } from "./Components/MainPage.jsx";
 import  NavbarContainer  from "./Components/Navbar.jsx";
 //import { setLogIn, removeLogIn } from './Slices/autorizSlice.js';
-
+import Rollbar from 'rollbar';
+import { Provider, ErrorBoundary } from '@rollbar/react';
 
 /*<Route path="/" element={(
   <PrivateRoute>
   <MainForm />
 </PrivateRoute>
 )}/> */
-import { Provider, ErrorBoundary } from '@rollbar/react';
+
 //import { fastifyStatic,  fastify } from '@rollbar/react';
 //const fastifyStatic = require('@fastify/static');
 
 const rollbarConfig = {
  // accessToken: 'f8272ad6c650422d986a5b04161fb605',
  // environment: 'production',
-  accessToken: 'POST_CLIENT_ITEM_ACCESS_TOKEN',
+  accessToken: '3912462ab6c743248feb0870e41fd18e',
   environment: 'production',
 };
 
+const rollbar = new Rollbar({
+  accessToken: '3912462ab6c743248feb0870e41fd18e',
+  captureUncaught: true,  // Ловит необработанные исключения
+  captureUnhandledRejections: true,  // Ловит необработанные promise'ы
+});
 
-function App() {
-  const dispatch = useDispatch();
+
+function App() {   
+  
  /* 
   useEffect(() => {
     if (localStorage.getItem('userIdToken'))
@@ -50,10 +57,10 @@ function App() {
 
   return (
    <Provider config={rollbarConfig}>
-     <ErrorBoundary>
+    <ErrorBoundary>
 
     <BrowserRouter>
-     <NavbarContainer/>
+      <NavbarContainer/>
       <Routes>        
         <Route element={<PrivateRoutes/>}>
               <Route path='/' element={<MainPage/>} />              
@@ -64,7 +71,7 @@ function App() {
       </Routes>
     </BrowserRouter>
 
-    </ErrorBoundary>
+   </ErrorBoundary>
   </Provider>
  
   );

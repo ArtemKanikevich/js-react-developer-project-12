@@ -1,12 +1,13 @@
 import { createSlice } from '@reduxjs/toolkit';
+import initialSt from "../initialSt.js";
 
-let logIn = false;
+let logIn = initialSt.logIn;
 if (localStorage.getItem("userIdToken")) logIn = true;
 
 // Начальное значение
 const initialState = {
-    userIdToken: "",    
-    error: "",
+    userIdToken: initialSt.userIdToken,    
+    error: initialSt.error,
     logIn
 };
 

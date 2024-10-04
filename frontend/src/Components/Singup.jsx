@@ -12,7 +12,6 @@ import { useNavigate } from 'react-router-dom';
 import paths from '../routes.js';
 import { setLogIn, setLogError } from "../Slices/autorizSlice.js";
 
-
 /*fields - объект с ключами полей userName, password.  
 const validate = (fields) => {
     try {
@@ -25,6 +24,7 @@ const validate = (fields) => {
   };  */
 // форма авторизации
 export const Singup = () => {
+  
     //const navigate = useNavigate();   
     // Возвращает метод store.dispatch() текущего хранилища
     const dispatch = useDispatch();

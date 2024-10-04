@@ -3,13 +3,12 @@ import { useSelector, useDispatch } from "react-redux";
 import { useNavigate } from 'react-router-dom';
 import axios from "axios";
 import { useFormik } from 'formik';
-import  {Container, Row, Col, Card, Form, Button, Spinner, InputGroup}  from 'react-bootstrap';
+import  { Form, Button, Spinner, InputGroup}  from 'react-bootstrap';
 import { useTranslation } from 'react-i18next';
 import { uniqueId } from 'lodash' ;
 import { Slide, toast } from 'react-toastify';
 import { leoFilter }  from "./Navbar.jsx";
-import { addMessages, setMessagesError, addMessage, loadMoreItems } from "../Slices/messagesSlice.js";
-import { removeLogIn } from "../Slices/autorizSlice.js";
+import { setMessagesError, loadMoreItems } from "../Slices/messagesSlice.js";
 import paths from "../routes.js";
 import {getAmount, insertMessages} from "../addmessages.js";
 
@@ -124,12 +123,7 @@ const Messages = () => {
         }
       };
 
-    const exitClick = () => {
-      localStorage.clear();
-      dispatch(removeLogIn());
-      navigate("/");
-    }
-
+  
     
     const formik = useFormik({
       initialValues: {
@@ -161,7 +155,7 @@ const Messages = () => {
        <div className="messages__active-chanal">                
           <div className="messages__active-chanal-name">
            <b># {channelsArr.find (elem => elem.id === currentCh).name}</b><br/>
-           {mesAmount}
+           {mesAmount} {t('key', {count: mesAmount})}
           </div>
 
           {loading &&
@@ -170,7 +164,7 @@ const Messages = () => {
           </Spinner> }
           
           <div>                   
-           <a onClick = {exitClick} href="#"className='navbar__icons'><i className="fi fi-rr-exit icon_home"></i></a> 
+           
           </div>
        </div>
 

@@ -30,7 +30,12 @@ const en = {
         add: "Add",
         cancel: "Cancel",
         rename: "Rename",
-        remove: "Remove",        
+        remove: "Remove", 
+
+        "key_zero": "messages",
+        "key_one": "message",
+        "key_other": "messages",
+        
 
         channel_message_1: 'Name must be at least 3 characters long',
         channel_message_2: 'Name must be 20 characters or less',

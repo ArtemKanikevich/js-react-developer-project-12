@@ -1,9 +1,17 @@
 
 
-.navbar__icons {
+.icons {
  text-decoration: none;
- color: black;
- 
+ color: black; 
+}
+
+.navbar__icons-item {
+ margin-right: 20px;
+}
+
+.navbar__container {
+  display: flex;
+  flex-direction: row;
 }
 
 .icon_home{

@@ -5,6 +5,12 @@ import { useState } from 'react';
 import  leoProf  from "leo-profanity";
 //import { FlaticonIcon } from '@flaticon/flaticon-uicons';
 import '@flaticon/flaticon-uicons/css/all/all.css';
+import { useNavigate } from 'react-router-dom';
+import { useSelector, useDispatch } from "react-redux";
+import { setCurrentChannel } from "../Slices/channelsSlice.js";
+import { removeLogIn } from "../Slices/autorizSlice.js";
+import initialSt from "../initialSt.js";
+
 
 function LngButtons() { 
   const { t, i18n } = useTranslation();
@@ -47,14 +53,31 @@ function LngButtons() {
 
 
 const NavbarContainer = () => { 
+  const dispatch = useDispatch();
+  const navigate = useNavigate();
+  const logIn = useSelector((state) => state.auth.logIn);
+
+  const exitClick = () => {
+    localStorage.clear();
+    dispatch(removeLogIn());
+    dispatch(setCurrentChannel(initialSt.currentCh));
+    navigate("/");
+  }
 
     return (
       <>   
       <Navbar expand="sm" bg="light" className="bg-body-tertiary" data-bs-theme="light">
         <Container>
-          <Navbar.Brand href="/">Slack Chat</Navbar.Brand>            
-                 
-          <LngButtons/>                    
+          <Navbar.Brand href='/'>Slack Chat</Navbar.Brand>            
+
+        <div className='navbar__container'>      
+          { logIn && <div>                   
+           <a onClick = {exitClick} href="#"className='icons navbar__icons-item'><i className="fi fi-rr-exit icon_home"></i></a> 
+          </div> 
+          }
+          <LngButtons/>   
+        </div>               
+
         </Container>
       </Navbar>
       <br />

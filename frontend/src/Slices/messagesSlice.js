@@ -1,9 +1,10 @@
 import { createSlice } from '@reduxjs/toolkit';
 import { removeChannel } from "./channelsSlice.js";
+import initialSt from "../initialSt.js";
 
 // Начальное значение
 const initialState = {
-    visibleItems: 50
+    visibleItems: initialSt.visibleItems
 };
 
 const messagesSlice = createSlice({
