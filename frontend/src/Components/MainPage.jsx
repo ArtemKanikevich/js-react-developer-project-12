@@ -64,9 +64,9 @@ export const MainPage = () => {
       //close spinner
       setLoading(false);      
       //console.log ("Socket start!");
-      const URL = process.env.NODE_ENV === 'production' ? undefined : 'http://localhost:5001';
+      const URL = process.env.NODE_ENV === 'production' ? undefined : 'http://localhost:5001'; // eslint-disable-line no-undef
       console.log ("socket URL:", URL);
-      console.log("process.env:",process.env);
+      console.log("process.env:",process.env);  // eslint-disable-line no-undef
       const socket = io(URL, {
         transports: ['websocket', 'polling'],
         withCredentials: true

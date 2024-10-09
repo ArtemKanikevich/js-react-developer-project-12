@@ -75,7 +75,7 @@ export const Singup = () => {
       },
       validationSchema: schema,
       onSubmit: (values) => {        
-        const { confirmPassword, ...reqValues  } = values; 
+        const { confirmPassword, ...reqValues  } = values; // eslint-disable-line no-unused-vars       
         //btn block
         btnSabmitRef.current.setAttribute ("disabled","");          
         autorizRequest(reqValues).catch(() => {

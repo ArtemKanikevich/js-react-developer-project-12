@@ -6,6 +6,7 @@ import { useTranslation } from 'react-i18next';
 import { useDispatch } from "react-redux";
 import { Slide, toast } from 'react-toastify';
 import * as yup from 'yup';
+import PropTypes from 'prop-types';
 
 import { setChannelsError, setCurrentChannel } from "../Slices/channelsSlice.js";
 import paths from "../routes.js";
@@ -18,7 +19,7 @@ const ModalNewChannel = (props) => {
   const inputRef = useRef(null);
   const btnSubmitRef = useRef(null);
   const btnCancelRef = useRef(null);
-  const { allchannels, isitnewch, idch, onHide, show } = props;
+  const { allchannels, isitnewch, idch } = props;
   const token = localStorage.getItem("userIdToken"); 
   //get names from allchannels
   const namesCh = allchannels.map(elem => elem.name);
@@ -210,5 +211,13 @@ const ModalNewChannel = (props) => {
     </Modal>
   )
 }
+
+  ModalNewChannel.propTypes = {   
+    allchannels: PropTypes.array.isRequired,
+    isitnewch: PropTypes.bool.isRequired,
+    idch: PropTypes.string,
+    onHide: PropTypes.func.isRequired,
+    show: PropTypes.bool.isRequired, 
+  };
 
   export default ModalNewChannel;

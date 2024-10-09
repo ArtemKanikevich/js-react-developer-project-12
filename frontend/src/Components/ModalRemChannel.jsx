@@ -5,6 +5,7 @@ import axios from "axios";
 import  { Button, Modal}  from 'react-bootstrap';
 import { Slide, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
+import PropTypes from 'prop-types';
 import {setChannelsError} from "../Slices/channelsSlice.js";
 import paths from "../routes.js";
 
@@ -96,5 +97,10 @@ const ModalRemChannel = (props) => {
         </Modal>     
     )
   }
+
+  ModalRemChannel.propTypes = {       
+    chid: PropTypes.string.isRequired,
+    onHide: PropTypes.func,
+  };
 
   export default ModalRemChannel;

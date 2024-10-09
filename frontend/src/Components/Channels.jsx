@@ -46,7 +46,10 @@ const Channals = () => {
           onSelect = {(eventKey) => showModal(eventKey, elem.id)} className="branches__toggle">
               <Button  className="w-100 text-start button__channel"
               onClick = {handleClick}  variant={currentCh === elem.id ? "success": "light"} data-as-id = {elem.id}>{`# ${elem.name}`}</Button>
-              <Dropdown.Toggle className="button__channel" split  variant={currentCh === elem.id ? "success": "light"} id={`dropdown-split-${elem.id}`}/> 
+              <Dropdown.Toggle className="button__channel" split  variant={currentCh === elem.id ? "success": "light"} id={`dropdown-split-${elem.id}`}>
+                <span className="visually-hidden">Управление каналом</span>
+              </Dropdown.Toggle>  
+             
               <Dropdown.Menu>
                 <Dropdown.Item eventKey ="1">{t("rename")}</Dropdown.Item>
                 <Dropdown.Item eventKey ="2">{t("remove")}</Dropdown.Item>                
