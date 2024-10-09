@@ -1,17 +1,19 @@
-import React, { useState } from "react";
+import React, { useRef } from "react";
 import { useTranslation } from 'react-i18next';
-import { useSelector, useDispatch } from "react-redux";
+import { useDispatch } from "react-redux";
 import axios from "axios";
 import  { Button, Modal}  from 'react-bootstrap';
 import { Slide, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
-import {setChannelsError, setCurrentChannel } from "../Slices/channelsSlice.js";
+import {setChannelsError} from "../Slices/channelsSlice.js";
 import paths from "../routes.js";
 
 
 const ModalRemChannel = (props) => {
     const { t } = useTranslation();
     const dispatch = useDispatch();
+    const btnSabmitRef = useRef(null);
+    const btnCancelRef = useRef(null);    
     const { chid } = props;      
 
     const token = localStorage.getItem("userIdToken"); 
@@ -21,7 +23,7 @@ const ModalRemChannel = (props) => {
     const removeCh = async (id) =>{          
       //         
       try {       
-        const response = await axios.delete([paths.channelsPath(), id].join("/"), {
+          await axios.delete([paths.channelsPath(), id].join("/"), {
           headers: {
             Authorization: `Bearer ${token}`,
           },
@@ -56,11 +58,19 @@ const ModalRemChannel = (props) => {
           progress: undefined,
           theme: "light",
           transition: Slide          
-          });          
+          });
+        throw err;            
       }
   };
     
-  
+  const btnClick = () => {    
+    btnSabmitRef.current.setAttribute ("disabled","");
+    btnCancelRef.current.setAttribute ("disabled","");          
+    removeCh(chid).catch(() => {
+    btnSabmitRef.current.removeAttribute ("disabled");
+    btnCancelRef.current.removeAttribute ("disabled")});  
+  };
+
     return (    
             
         <Modal
@@ -78,8 +88,9 @@ const ModalRemChannel = (props) => {
            </Modal.Body>  
   
             <Modal.Footer>       
-              <Button variant="secondary" onClick={props.onHide}>{t("cancel")}</Button>
-              <Button onClick = {() => removeCh(chid)} variant="success">{t("remove")}</Button>          
+              <Button variant="secondary" onClick={props.onHide}
+              ref ={btnCancelRef}>{t("cancel")}</Button>
+              <Button onClick = {btnClick} ref ={btnSabmitRef} variant="success">{t("remove")}</Button>          
             </Modal.Footer>     
             
         </Modal>     

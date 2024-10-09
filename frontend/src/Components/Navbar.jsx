@@ -1,5 +1,5 @@
 import React, { useEffect } from 'react';
-import { Navbar, ButtonGroup, ToggleButton, Container, Button } from 'react-bootstrap';
+import { Navbar, ButtonGroup, ToggleButton, Container } from 'react-bootstrap';
 import { useTranslation } from 'react-i18next';
 import { useState } from 'react';
 import  leoProf  from "leo-profanity";

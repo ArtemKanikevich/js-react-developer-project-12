@@ -1,9 +1,9 @@
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import { useTranslation } from 'react-i18next';
 import { useSelector, useDispatch } from "react-redux";
 
-import  {Container, ListGroup, Dropdown, ButtonGroup, Row, Col, Card, Form, Button, }  from 'react-bootstrap';
-import { ToastContainer, toast } from 'react-toastify';
+import  { Dropdown, ButtonGroup, Button, }  from 'react-bootstrap';
+import { ToastContainer } from 'react-toastify';
 //import 'react-toastify/dist/ReactToastify.css';
 
 import { setCurrentChannel } from "../Slices/channelsSlice.js";
@@ -43,7 +43,7 @@ const Channals = () => {
          {data.map(elem => (                 
           elem.removable ? (
           <Dropdown as={ButtonGroup} key = {`channal-${elem.id}`}
-          onSelect = {(eventKey, e) => showModal(eventKey, elem.id)} className="branches__toggle">
+          onSelect = {(eventKey) => showModal(eventKey, elem.id)} className="branches__toggle">
               <Button  className="w-100 text-start button__channel"
               onClick = {handleClick}  variant={currentCh === elem.id ? "success": "light"} data-as-id = {elem.id}>{`# ${elem.name}`}</Button>
               <Dropdown.Toggle className="button__channel" split  variant={currentCh === elem.id ? "success": "light"} id={`dropdown-split-${elem.id}`}/> 

@@ -33,7 +33,7 @@ const sendMessage = async (messageObj, token) =>{
     } catch (err) {
       console.error(err);     
       return false;
-    //  throw err;
+      //throw err;
     }
   };
 

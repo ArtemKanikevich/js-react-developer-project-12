@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { useSelector, useDispatch } from "react-redux";
+import { useDispatch } from "react-redux";
 import axios from "axios";
 import  {Container, Spinner}  from 'react-bootstrap';
 import { io } from "socket.io-client";
@@ -150,7 +150,7 @@ export const MainPage = () => {
     };
     
 
-    Promise.all([getChannels(token), getMessages(token)]).then(() => socketV = socketConnect()).catch((err) => 
+    Promise.all([getChannels(token), getMessages(token)]).then(() => socketV = socketConnect()).catch(() => 
       toast.error(t('toastify_err'), {
         position: "top-center",
         autoClose: 3000,

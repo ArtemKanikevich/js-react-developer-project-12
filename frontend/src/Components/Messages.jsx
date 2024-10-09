@@ -1,6 +1,6 @@
 import React, { useEffect, useState, useRef } from "react";
 import { useSelector, useDispatch } from "react-redux";
-import { useNavigate } from 'react-router-dom';
+//import { useNavigate } from 'react-router-dom';
 import axios from "axios";
 import { useFormik } from 'formik';
 import  { Form, Button, Spinner, InputGroup}  from 'react-bootstrap';
@@ -18,8 +18,9 @@ const Messages = () => {
     const { t } = useTranslation();
     const inputRef = useRef(null);
     const listRef = useRef(null);
+    const btnSubmitRef = useRef(null);
     const dispatch = useDispatch();
-    const navigate = useNavigate();
+   
     //spiner
     const[loading, setLoading] = useState(true);
     //infinite scroll
@@ -41,7 +42,7 @@ const Messages = () => {
     //console.log("visibleItems :",visibleItems);
     //infinite scroll    
     const handleScroll = () => {   
-      const { scrollTop, clientHeight, scrollHeight } = listRef.current;   
+      const { scrollTop, clientHeight } = listRef.current;   
      // console.log("scrollTop :", scrollTop);     
      // console.log("visItems :",visibleItems);      
      // console.log("mesAmount :", mesAmount);       
@@ -101,7 +102,7 @@ const Messages = () => {
             },
           });
           console.log(`New message was sent `, response.data); // =>[{ id: '1', name: 'general', removable: false }, ...]
-          return true;         
+         // return true;         
 
         } catch (err) {
           console.error(err);
@@ -118,8 +119,8 @@ const Messages = () => {
             theme: "light",
             transition: Slide          
             });        
-          return false;
-        //  throw err;
+         // return false;
+         // throw err;
         }
       };
 
@@ -130,19 +131,23 @@ const Messages = () => {
         message: '', 
       },    
       onSubmit: (values) => {
+        btnSubmitRef.current.setAttribute ("disabled","");        
         // filter        
         const message = leoFilter.clean(values.message);
         //insert N auto messages. Type: "/insert-N"
         if (getAmount(values.message)) {
-          insertMessages(getAmount(values.message), currentCh, userName, token, setLoading);
+          insertMessages(getAmount(values.message), currentCh, userName, token, setLoading).finally(() => 
+            btnSubmitRef.current.removeAttribute ("disabled"));
          // console.log (pr);
         } 
         //normal sending 
-        else if (sendMessage(message)) {
+        else sendMessage(message)
+        .then(() =>  formik.values.message = "")
+        .finally(() => btnSubmitRef.current.removeAttribute ("disabled")); //{
           // reset input
          // inputRef.current.value = ''
-          formik.values.message = "";
-        }
+       //   formik.values.message = "";
+       // }
       }       
     });  
     
@@ -195,7 +200,7 @@ const Messages = () => {
            ref={inputRef}        
            />                 
          
-         <Button variant="success" type="submit" id="button-addon2">
+         <Button variant="success" ref = {btnSubmitRef} type="submit" id="button-addon2">
            {t('sent')}
          </Button>
          </InputGroup>        

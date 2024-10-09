@@ -1,22 +1,24 @@
-import React, { useState, useRef, useEffect } from "react";
-import { useTranslation } from 'react-i18next';
-import { useSelector, useDispatch } from "react-redux";
 import axios from "axios";
 import { useFormik } from 'formik';
-import * as yup from 'yup';
-import  {Form, Button, Modal}  from 'react-bootstrap';
+import React, { useEffect, useRef } from "react";
+import { Button, Form, Modal } from 'react-bootstrap';
+import { useTranslation } from 'react-i18next';
+import { useDispatch } from "react-redux";
 import { Slide, toast } from 'react-toastify';
+import * as yup from 'yup';
 
-import {setChannelsError, setCurrentChannel } from "../Slices/channelsSlice.js";
+import { setChannelsError, setCurrentChannel } from "../Slices/channelsSlice.js";
 import paths from "../routes.js";
-import { leoFilter }  from "./Navbar.jsx";
+import { leoFilter } from "./Navbar.jsx";
 
 
 const ModalNewChannel = (props) => {
   const { t } = useTranslation();
   const dispatch = useDispatch();
   const inputRef = useRef(null);
-  const { allchannels, isitnewch, idch  } = props;
+  const btnSubmitRef = useRef(null);
+  const btnCancelRef = useRef(null);
+  const { allchannels, isitnewch, idch, onHide, show } = props;
   const token = localStorage.getItem("userIdToken"); 
   //get names from allchannels
   const namesCh = allchannels.map(elem => elem.name);
@@ -52,12 +54,23 @@ const ModalNewChannel = (props) => {
       newChannel: activeNameCh, 
     },
     validationSchema: schema,    
-    onSubmit: (values) => {
+    onSubmit: (values) => {    
+      // ntn block 
+      btnSubmitRef.current.setAttribute ("disabled","");
+      btnCancelRef.current.setAttribute ("disabled","");      
       //filter
       const newCh = leoFilter.clean(values.newChannel);
 
-      if (isitnewch === 'true') createNewCh(newCh);
-      if (isitnewch === 'false') renameCh(newCh);
+      if (isitnewch === 'true')  
+        createNewCh(newCh).catch(() => {
+        btnSubmitRef.current.removeAttribute ("disabled");
+        btnCancelRef.current.removeAttribute ("disabled"); 
+      });
+      if (isitnewch === 'false')  
+        renameCh(newCh).catch(() => {       
+        btnSubmitRef.current.removeAttribute ("disabled");
+        btnCancelRef.current.removeAttribute ("disabled"); 
+      });
     }   
 
   });       
@@ -105,7 +118,8 @@ const ModalNewChannel = (props) => {
        progress: undefined,
        theme: "light",
        transition: Slide          
-      });        
+      });   
+      throw err;     
     }
   };  
 
@@ -150,7 +164,8 @@ const ModalNewChannel = (props) => {
         progress: undefined,
         theme: "light",
         transition: Slide          
-        });        
+        });
+      throw err;           
     }
   };  
 
@@ -162,10 +177,10 @@ const ModalNewChannel = (props) => {
     centered >
       <Form onSubmit = {formik.handleSubmit}>   
 
-      <Modal.Header closeButton>
+      <Modal.Header >        
         <Modal.Title id="contained-modal-title-vcenter">
           {title}
-        </Modal.Title>
+        </Modal.Title>       
       </Modal.Header>
 
       <Modal.Body>           
@@ -187,8 +202,8 @@ const ModalNewChannel = (props) => {
        </Modal.Body>  
 
         <Modal.Footer>       
-          <Button variant="secondary" onClick={props.onHide}>{t("cancel")}</Button>
-          <Button variant="success" type="submit">{t("sent")}</Button>          
+          <Button variant="secondary" ref = {btnCancelRef} onClick={props.onHide}>{t("cancel")}</Button>
+          <Button variant="success" ref = {btnSubmitRef} type="submit">{t("sent")}</Button>          
         </Modal.Footer>   
 
         </Form>  

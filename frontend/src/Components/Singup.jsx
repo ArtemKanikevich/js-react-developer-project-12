@@ -1,11 +1,11 @@
-import React from 'react';
+import React, {useRef} from 'react';
 //import { useNavigate } from 'react-router-dom';
-import { useSelector, useDispatch } from 'react-redux';
+import { useDispatch } from 'react-redux';
 //import { Formik, Form, Field } from 'formik';
 import { useFormik } from 'formik';
 import * as yup from 'yup';
 import axios from 'axios';
-import  {Form, Card, Stack, Button}  from 'react-bootstrap';
+import  {Form, Card, Button}  from 'react-bootstrap';
 import { useTranslation } from 'react-i18next';
 import { useNavigate } from 'react-router-dom';
 
@@ -31,6 +31,7 @@ export const Singup = () => {
     const dispatch = useDispatch();
     const { t } = useTranslation();
     const navigate = useNavigate();
+    const btnSabmitRef = useRef(null);
     // validation object 
     const schema = yup.object().shape({
       username: yup.string().trim().min(3, t('login_message_1')).
@@ -62,6 +63,7 @@ export const Singup = () => {
         console.error (err);
         // save error in state
         dispatch(setLogError(err.code));
+        throw err;
       }
     };
 
@@ -72,10 +74,13 @@ export const Singup = () => {
         confirmPassword: '',
       },
       validationSchema: schema,
-      onSubmit: (values) => {       
-        
-        const { confirmPassword, ...reqValues  } = values;  
-        autorizRequest(reqValues);
+      onSubmit: (values) => {        
+        const { confirmPassword, ...reqValues  } = values; 
+        //btn block
+        btnSabmitRef.current.setAttribute ("disabled","");          
+        autorizRequest(reqValues).catch(() => {
+          btnSabmitRef.current.removeAttribute ("disabled");         
+        });          
        // console.log(reqValues);
       },
     });  
@@ -145,7 +150,7 @@ export const Singup = () => {
         </Form.Group>         
        
         <div className="d-grid gap-2">
-          <Button variant="success" type="submit">{t('create_user')}</Button>
+          <Button variant="success" ref= {btnSabmitRef} type="submit">{t('create_user')}</Button>
         </div>       
        
         <AuthError/>  

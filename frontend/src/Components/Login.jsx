@@ -1,8 +1,8 @@
-import React from 'react';
-//import { useNavigate } from 'react-router-dom';
-import { useSelector, useDispatch } from 'react-redux';
+import React, { useRef } from 'react';
+
+import { useDispatch } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
-//import { Formik, Form, Field } from 'formik';
+
 import { useFormik } from 'formik';
 import * as yup from 'yup';
 import axios from 'axios';
@@ -31,6 +31,8 @@ export const LogInForm = () => {
     const { t } = useTranslation();
     //huke for singup form
     const navigate = useNavigate();
+    const btnSabmitRef = useRef(null);
+    const btnSingRef = useRef(null);
     // validation object 
     const schema = yup.object().shape({
       username: yup.string().trim().min(3, t('login_message_1')).
@@ -55,12 +57,13 @@ export const LogInForm = () => {
         }
         else dispatch(setLogError(t('tokenErr')));          
        // console.log(localStorage);        
-        
       }
       catch (err) {
         console.error (err);
         // save error in state
         dispatch(setLogError(err.code));
+        // throw err for cath block
+        throw err;
       }
     };
 
@@ -70,13 +73,20 @@ export const LogInForm = () => {
         password: "",
       },
       validationSchema: schema,
-      onSubmit: (values) => {       
-        autorizRequest(values);
-       // console.log(JSON.stringify(values, null, 2));
+      onSubmit: (values) => {
+        // turn on block button   
+        btnSabmitRef.current.setAttribute ("disabled",""); 
+        btnSingRef.current.setAttribute ("disabled","");        
+        autorizRequest(values).catch(() => {
+          btnSabmitRef.current.removeAttribute ("disabled");
+          btnSingRef.current.removeAttribute ("disabled");
+        });  
+        //setTimeout(() => btnSabRef.current.removeAttribute ("disabled"), 2000)); 
+      
       },
     });    
 
-    const singupClick =(e) =>{
+    const singupClick = () =>{
       navigate("/singup");
       dispatch(setLogError(""));
     }
@@ -127,8 +137,8 @@ export const LogInForm = () => {
         </Form.Group> 
         
         <Stack direction="horizontal" gap={3}>
-          <Button variant="success" type="submit">{t('submit')}</Button>
-          <Button variant="outline-secondary" onClick={singupClick}>{t('sing_up')}</Button>
+          <Button variant="success" ref ={btnSabmitRef} type="submit">{t('submit')}</Button>
+          <Button variant="outline-secondary" ref ={btnSingRef} onClick={singupClick}>{t('sing_up')}</Button>
         </Stack> 
        
         <AuthError/>  
