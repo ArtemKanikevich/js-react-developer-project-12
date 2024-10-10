@@ -4,13 +4,14 @@ import React, { useEffect, useRef } from "react";
 import { Button, Form, Modal } from 'react-bootstrap';
 import { useTranslation } from 'react-i18next';
 import { useDispatch } from "react-redux";
-import { Slide, toast } from 'react-toastify';
+import { toast } from 'react-toastify';
 import * as yup from 'yup';
 import PropTypes from 'prop-types';
 
 import { setChannelsError, setCurrentChannel } from "../Slices/channelsSlice.js";
 import paths from "../routes.js";
 import { leoFilter } from "./Navbar.jsx";
+import toastObj from "../toastObj.js";
 
 
 const ModalNewChannel = (props) => {
@@ -93,33 +94,13 @@ const ModalNewChannel = (props) => {
       // set current Ch
       dispatch(setCurrentChannel(response.data.id));
 
-      toast.success(t('toastify_new'), {
-        position: "top-center",
-        autoClose: 3000,
-        hideProgressBar: true,
-        closeOnClick: true,
-        pauseOnHover: true,
-        draggable: true,
-        progress: undefined,
-        theme: "light",
-        transition: Slide        
-        });        
+      toast.success(t('toastify_new'), toastObj);        
          
     } catch (err) {
       console.error(err);
       dispatch(setChannelsError(err.response ? err.response.statusText +`. `+err.message : err.message));
      // throw err;
-       toast.error(t('toastify_err'), {
-       position: "top-center",
-       autoClose: 3000,
-       hideProgressBar: true,
-       closeOnClick: true,
-       pauseOnHover: true,
-       draggable: true,
-       progress: undefined,
-       theme: "light",
-       transition: Slide          
-      });   
+       toast.error(t('toastify_err'), toastObj);   
       throw err;     
     }
   };  
@@ -139,33 +120,13 @@ const ModalNewChannel = (props) => {
       //remove modal
       props.onHide();
       
-      toast.success(t('toastify_ren'), {
-        position: "top-center",
-        autoClose: 3000,
-        hideProgressBar: true,
-        closeOnClick: true,
-        pauseOnHover: true,
-        draggable: true,
-        progress: undefined,
-        theme: "light",
-        transition: Slide        
-        });        
+      toast.success(t('toastify_ren'), toastObj);        
          
     } catch (err) {
       console.error(err);
       dispatch(setChannelsError(err.response ? err.response.statusText +`. `+err.message : err.message));
      // throw err;      
-      toast.error(t('toastify_err'), {
-        position: "top-center",
-        autoClose: 3000,
-        hideProgressBar: true,
-        closeOnClick: true,
-        pauseOnHover: true,
-        draggable: true,
-        progress: undefined,
-        theme: "light",
-        transition: Slide          
-        });
+      toast.error(t('toastify_err'), toastObj);
       throw err;           
     }
   };  
@@ -214,7 +175,7 @@ const ModalNewChannel = (props) => {
 
   ModalNewChannel.propTypes = {   
     allchannels: PropTypes.array.isRequired,
-    isitnewch: PropTypes.bool.isRequired,
+    isitnewch: PropTypes.string.isRequired,
     idch: PropTypes.string,
     onHide: PropTypes.func.isRequired,
     show: PropTypes.bool.isRequired, 

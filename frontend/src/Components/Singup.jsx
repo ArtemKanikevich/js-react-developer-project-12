@@ -88,7 +88,7 @@ export const Singup = () => {
 
     return (  
       
-    <Card style={{ width: '20rem', margin: 'auto', }}>
+    <Card className ='card__container'>
      <Card.Body>
      <Card.Title>{t('sing_up')}</Card.Title>     
 

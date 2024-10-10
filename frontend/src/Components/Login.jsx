@@ -93,7 +93,7 @@ export const LogInForm = () => {
 
     return (  
       
-    <Card style={{ width: '20rem', margin: 'auto', }}>
+    <Card className ='card__container'>
      <Card.Body>
      <Card.Title>{t('login')}</Card.Title>     
 

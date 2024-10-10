@@ -13,7 +13,7 @@ import initialSt from "../initialSt.js";
 
 
 function LngButtons() { 
-  const { t, i18n } = useTranslation();
+  const { i18n } = useTranslation();
   //i18n.changeLanguage("ru");
   const [radioValue, setRadioValue] = useState('ru');
 
@@ -22,8 +22,8 @@ function LngButtons() {
   },[]);  
 
   const radios = [
-    { name: t('leng_en'), value: 'en' },
-    { name: t('leng_ru'), value: 'ru' },    
+    { name: 'en', value: 'en' },
+    { name: 'ру', value: 'ru' },    
   ];
 
   return (
@@ -66,13 +66,13 @@ const NavbarContainer = () => {
 
     return (
       <>   
-      <Navbar expand="sm" bg="light" className="bg-body-tertiary" data-bs-theme="light">
+      <Navbar expand="sm" className="bg_stile" >
         <Container>
           <Navbar.Brand href='/'>Hexlet Chat</Navbar.Brand>            
 
         <div className='navbar__container'>      
-          { logIn && <div>                   
-           <a onClick = {exitClick} href="#"className='icons navbar__icons-item'><i className="fi fi-rr-exit icon_home"></i></a> 
+          { logIn && <div className='navbar__icons-item'>                   
+           <a onClick = {exitClick} href="#"className='icons'><i className="fi fi-rr-exit icon_home"></i></a> 
           </div> 
           }
           <LngButtons/>   

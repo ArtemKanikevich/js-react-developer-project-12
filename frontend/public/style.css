@@ -1,4 +1,29 @@
+:root {
+  --color-gray: #f8f9fa;
+  --color-gray2: #f4fcf4;
+  --color-white: white;
+} 
 
+body {
+  background-color: var(--color-gray);
+} 
+
+.card__container{
+  width:  20rem;
+  margin: auto;
+  border: none;
+  -webkit-box-shadow: 0px 1px 5px 1px rgba(34, 60, 80, 0.34);
+  -moz-box-shadow: 0px 1px 5px 1px rgba(34, 60, 80, 0.34);
+  box-shadow: 0px 1px 5px 1px rgba(34, 60, 80, 0.34);  
+  border-radius: 5px;
+}
+
+.bg_stile{
+  background-color: var(--color-white);
+  -webkit-box-shadow: 0px 5px 5px -5px rgba(34, 60, 80, 0.34);
+  -moz-box-shadow: 0px 5px 5px -5px rgba(34, 60, 80, 0.34);
+  box-shadow: 0px 5px 5px -5px rgba(34, 60, 80, 0.34);
+}
 
 .icons {
  text-decoration: none;
@@ -7,6 +32,7 @@
 
 .navbar__icons-item {
  margin-right: 20px;
+ padding-top: 5px;
 }
 
 .navbar__container {
@@ -34,20 +60,30 @@
  }
 
  .branches__container{
-  background-color: rgb(225, 248, 230);
+  background-color: var(--color-white);
   width: 30%;
   margin-right: 5px;
   display: flex;
   flex-direction: column;
+
+  -webkit-box-shadow: 0px 1px 5px 1px rgba(34, 60, 80, 0.34);
+  -moz-box-shadow: 0px 1px 5px 1px rgba(34, 60, 80, 0.34);
+  box-shadow: 0px 1px 5px 1px rgba(34, 60, 80, 0.34);
+  border-radius: 5px;
  }
 
  .messages__container{
-  background-color: rgb(227, 237, 252);
+  background-color:var(--color-white);
   width: 70%;
   display: flex;  
   flex-direction: column; 
   justify-content: space-between;
   position: relative;
+
+  -webkit-box-shadow: 0px 1px 5px 1px rgba(34, 60, 80, 0.34);
+  -moz-box-shadow: 0px 1px 5px 1px rgba(34, 60, 80, 0.34);
+  box-shadow: 0px 1px 5px 1px rgba(34, 60, 80, 0.34);  
+  border-radius: 5px;
   
  }
 
@@ -60,18 +96,22 @@
   padding-left: 15px;
   padding-right: 15px;
   min-height:80px;
-  background-color: antiquewhite;
+  background-color: var(--color-white);
+
+  -webkit-box-shadow: 0px 5px 5px -5px rgba(34, 60, 80, 0.34);
+  -moz-box-shadow: 0px 5px 5px -5px rgba(34, 60, 80, 0.34);
+  box-shadow: 0px 5px 5px -5px rgba(34, 60, 80, 0.34);
+  border-top-right-radius: 5px;
+  border-top-left-radius: 5px;
   
  }
 
  
  .messages__list{
-  overflow-y: auto;  
-  
-  padding-left: 15px;
-  padding-right: 15px;
-  height: 100%;
-  
+  overflow-y: auto;    
+  padding: 15px; 
+  height: 100%; 
+   
   
  }
 
@@ -83,18 +123,22 @@
 
  .messages__ul{
   list-style-type: none;
-  padding-right: 15px;  
+  padding-right: 20px;
+  padding-left: 20px;  
+  margin-bottom: 0px;
  }
 
  .branches__title {
     min-height:80px;
-    background-color: antiquewhite;
+    background-color: var(--color-white);
     padding-right: 15px;
     padding-left: 15px;
     display: flex;
     justify-content: space-between;
     flex-direction: row;
     align-items: center;
+    border-top-right-radius: 5px;
+    border-top-left-radius: 5px;
 
  }
 

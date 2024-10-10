@@ -6,11 +6,12 @@ import { useFormik } from 'formik';
 import  { Form, Button, Spinner, InputGroup}  from 'react-bootstrap';
 import { useTranslation } from 'react-i18next';
 import { uniqueId } from 'lodash' ;
-import { Slide, toast } from 'react-toastify';
+import { toast } from 'react-toastify';
 import { leoFilter }  from "./Navbar.jsx";
 import { setMessagesError, loadMoreItems } from "../Slices/messagesSlice.js";
 import paths from "../routes.js";
 import {getAmount, insertMessages} from "../addmessages.js";
+import toastObj from "../toastObj.js";
 
 
 const Messages = () => {
@@ -108,17 +109,7 @@ const Messages = () => {
           console.error(err);
           dispatch(setMessagesError(err.response ? err.response.statusText +`. `+err.message : err.message));
            //  throw err;
-          toast.error(t('toastify_err'), {
-            position: "top-center",
-            autoClose: 3000,
-            hideProgressBar: true,
-            closeOnClick: true,
-            pauseOnHover: true,
-            draggable: true,
-            progress: undefined,
-            theme: "light",
-            transition: Slide          
-            });        
+          toast.error(t('toastify_err'), toastObj);        
          // return false;
          // throw err;
         }

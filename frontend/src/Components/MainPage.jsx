@@ -4,14 +4,14 @@ import axios from "axios";
 import  {Container, Spinner}  from 'react-bootstrap';
 import { io } from "socket.io-client";
 import { useTranslation } from 'react-i18next';
-import { Slide, toast } from 'react-toastify';
+import { toast, ToastContainer } from 'react-toastify';
 import { renameChannel, removeChannel, addChannels, addChannel, setChannelsError, setCurrentChannel } from "../Slices/channelsSlice.js";
 import { addMessages, setMessagesError, addMessage } from "../Slices/messagesSlice.js";
 import paths from "../routes.js";
 import Messages from "./Messages.jsx";
 import Channels from "./Channels.jsx";
+import toastObj from "../toastObj.js";
 
-//import logo from "../logo.svg";
 
 export const MainPage = () => {
   const dispatch = useDispatch();  
@@ -74,17 +74,7 @@ export const MainPage = () => {
       
       socket.on("connect", () => {        
         console.log("Connect: ", socket.connected); // true
-        toast.success(t('toastify_soc'), {
-          position: "top-center",
-          autoClose: 3000,
-          hideProgressBar: true,
-          closeOnClick: true,
-          pauseOnHover: true,
-          draggable: true,
-          progress: undefined,
-          theme: "light",
-          transition: Slide          
-          });                  
+        toast.success(t('toastify_soc'), toastObj);                  
       });
 
       socket.on("disconnect", () => {        
@@ -94,33 +84,13 @@ export const MainPage = () => {
       socket.on("connect_error", (error) => {
         if (socket.active) {
           // temporary failure, the socket will automatically try to reconnect
-          toast.warn(t('toastify_war'), {
-            position: "top-center",
-            autoClose: 3000,
-            hideProgressBar: true,
-            closeOnClick: true,
-            pauseOnHover: true,
-            draggable: true,
-            progress: undefined,
-            theme: "light",
-            transition: Slide          
-            });          
+          toast.warn(t('toastify_war'), toastObj);          
           
         } else {
           // the connection was denied by the server
           // in that case, `socket.connect()` must be manually called in order to reconnect
           console.log(error.message);
-          toast.error(t('toastify_err'), {
-            position: "top-center",
-            autoClose: 3000,
-            hideProgressBar: true,
-            closeOnClick: true,
-            pauseOnHover: true,
-            draggable: true,
-            progress: undefined,
-            theme: "light",
-            transition: Slide          
-            });        
+          toast.error(t('toastify_err'), toastObj);        
         }
       });
 
@@ -151,19 +121,8 @@ export const MainPage = () => {
     
 
     Promise.all([getChannels(token), getMessages(token)]).then(() => socketV = socketConnect()).catch(() => 
-      toast.error(t('toastify_err'), {
-        position: "top-center",
-        autoClose: 3000,
-        hideProgressBar: true,
-        closeOnClick: true,
-        pauseOnHover: true,
-        draggable: true,
-        progress: undefined,
-        theme: "light",
-        transition: Slide          
-        }));
-    //.then((socket)=> socketV = socket);
-    
+      toast.error(t('toastify_err'), toastObj));
+        
     return () => {
       // Эта логика выполнится только при размонтировании компонента
       console.log("Main Page unmount");      
@@ -186,6 +145,7 @@ export const MainPage = () => {
          <>  
          <Channels/>
          <Messages/>
+         <ToastContainer role="alert"/>
          </>
         }
       </div>     

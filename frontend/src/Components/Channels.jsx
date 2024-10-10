@@ -76,9 +76,7 @@ const Channals = () => {
           onHide={() => setModalRemCh({show: false, id: "0"})}
           chid = {ModalRemCh.id}/> )    
          : null } 
-
-          <ToastContainer role="alert"/>
-        
+         
       </div> 
       ): null 
     )
