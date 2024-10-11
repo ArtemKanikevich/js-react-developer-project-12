@@ -4,7 +4,8 @@ import initialSt from "../initialSt.js";
 // Начальное значение
 const initialState = {
      //set current chanal  = 1
-     currentCh: initialSt.currentCh
+     currentCh: initialSt.currentCh,
+     unRead: []
 };
 
 const channelsSlice = createSlice({
@@ -34,11 +35,22 @@ const channelsSlice = createSlice({
        },
        renameChannel: (state, action) => {
         state.data = state.data.map(elem => elem.id === action.payload.id ? elem = action.payload : elem)
-       }
-         
+       },
+        //--------
+        addUnRead: (state, action) => {
+            // console.log(action);
+            state.unRead = [...state.unRead, action.payload];
+        },
+        addUnRead_am: (state, action) => {
+            // console.log(action);
+             state.unRead = action.payload;
+        },
+        removeFromUnRead: (state, action) => {
+             state.unRead = state.unRead.filter(id => id != action.payload);        
+        },  
     
     }
 });       
 
-export const { renameChannel, addChannel, addChannels, setChannelsError, setCurrentChannel, removeChannel } = channelsSlice.actions;
+export const { renameChannel, addChannel, addChannels, setChannelsError, setCurrentChannel, removeChannel, addUnRead, addUnRead_am, removeFromUnRead } = channelsSlice.actions;
 export default channelsSlice.reducer;

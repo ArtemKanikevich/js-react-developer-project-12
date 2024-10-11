@@ -33,14 +33,13 @@ const rollbarConfig = {
 function App() {   
 
   const logIn = useSelector((state) => state.auth.logIn);
-  //console.log(`logIn: `,logIn);
-  //const logIn = false;
+  
   const PrivateRoutes = () => {    
      return (
        localStorage.getItem('userIdToken') ? <Outlet/> : <Navigate to="/login"/>
      );
   };
-  //if (logIn) <Navigate to="/"/>; 
+  
 
   return (
    <Provider config={rollbarConfig}>

@@ -1,5 +1,5 @@
 import React, { useEffect } from 'react';
-import { Navbar, ButtonGroup, ToggleButton, Container } from 'react-bootstrap';
+import { Navbar, ButtonGroup, ToggleButton, Container, Offcanvas } from 'react-bootstrap';
 import { useTranslation } from 'react-i18next';
 import { useState } from 'react';
 import  leoProf  from "leo-profanity";
@@ -10,6 +10,8 @@ import { useSelector, useDispatch } from "react-redux";
 import { setCurrentChannel } from "../Slices/channelsSlice.js";
 import { removeLogIn } from "../Slices/autorizSlice.js";
 import initialSt from "../initialSt.js";
+import Channels from "./Channels.jsx";
+import mobileAdapter from "../mobileAdapter.js";
 
 
 function LngButtons() { 
@@ -55,7 +57,24 @@ function LngButtons() {
 const NavbarContainer = () => { 
   const dispatch = useDispatch();
   const navigate = useNavigate();
+  const [forMobile, setForMobile] = useState(false);
+  const [showOffCanvas, setShowOffCanvas] = useState(false);
   const logIn = useSelector((state) => state.auth.logIn);
+  const { unRead } = useSelector((state) => state.channels);
+
+  const openOffCanvas = () => {
+    setShowOffCanvas(true);
+   }
+   
+   const closeOffCanvas = () => {
+    setShowOffCanvas(false); 
+   }
+     
+   useEffect(() => {    
+     const resizeReset = mobileAdapter(setForMobile);
+    //console.log("mobile ", forMobile);
+     return resizeReset;
+   },[]);  
 
   const exitClick = () => {
     localStorage.clear();
@@ -68,18 +87,38 @@ const NavbarContainer = () => {
       <>   
       <Navbar expand="sm" className="bg_stile" >
         <Container>
-          <Navbar.Brand href='/'>Hexlet Chat</Navbar.Brand>            
+          <Navbar.Brand href='/'>Hexlet Chat</Navbar.Brand>  
 
-        <div className='navbar__container'>      
-          { logIn && <div className='navbar__icons-item'>                   
-           <a onClick = {exitClick} href="#"className='icons'><i className="fi fi-rr-exit icon_home"></i></a> 
-          </div> 
+          { forMobile && logIn &&
+            <div className="icon__container">                   
+             <a onClick = {openOffCanvas} href="#"className='navbar__icons'>       
+                <i className= "fi fi-sr-menu-burger icon_size"></i>
+              </a>
+            </div>
           }
-          <LngButtons/>   
-        </div>               
+
+          { forMobile && logIn &&
+            <div className="icon__container">
+              {unRead.length > 0 && <i className="fi fi-rr-comment message__icons"></i>}
+            </div>  
+          }        
+        
+          <div className='navbar__container'>      
+            { logIn && 
+            <div className='navbar__icons-item'>                   
+            <a onClick = {exitClick} href="#"className='icons'><i    className="fi fi-rr-exit icon-home"></i></a> 
+            </div> 
+            }
+            <LngButtons/>   
+          </div>              
 
         </Container>
       </Navbar>
+
+      <Offcanvas show={showOffCanvas} onHide={closeOffCanvas}  className="custom-offcanvas"> 
+         <Channels inOffCanvas = {true} hideOffCanvas = {closeOffCanvas}/>
+      </Offcanvas>
+
       <br />
       </>
     );

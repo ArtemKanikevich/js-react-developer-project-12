@@ -1,6 +1,6 @@
 import React, { useEffect, useState, useRef } from "react";
 import { useSelector, useDispatch } from "react-redux";
-//import { useNavigate } from 'react-router-dom';
+import PropTypes from 'prop-types';
 import axios from "axios";
 import { useFormik } from 'formik';
 import  { Form, Button, Spinner, InputGroup}  from 'react-bootstrap';
@@ -14,20 +14,19 @@ import {getAmount, insertMessages} from "../addmessages.js";
 import toastObj from "../toastObj.js";
 
 
-const Messages = () => {
-   // const [text, setText] = useState("");
+const Messages = (props) => {
+   
     const { t } = useTranslation();
     const inputRef = useRef(null);
     const listRef = useRef(null);
     const btnSubmitRef = useRef(null);
-    const dispatch = useDispatch();
-   
+    const dispatch = useDispatch();    
     //spiner
-    const[loading, setLoading] = useState(true);
+    const[loading, setLoading] = useState(false);
+    const { forMobile } = props;
     //infinite scroll
    // const [visibleItems, setVisibleItems] = useState(20); // Изначально показываем 20 элементов
     //
-
     const messagesArr = useSelector((state) => state.messages.data);
     const { currentCh } = useSelector((state) => state.channels);   
     const channelsArr =  useSelector((state) => state.channels.data);  
@@ -35,6 +34,11 @@ const Messages = () => {
     const token = localStorage.getItem("userIdToken");   
     const userName =  localStorage.getItem("userIdName");
     let mesAmount = 0;
+    let classNameCont ="";
+
+    //mobile adaptor class
+    if (forMobile) classNameCont = "container-mobile messages messages__container";
+    else classNameCont = "messages messages__container"; 
 
     //пропускаем перв. рендер  
     if (messagesArr != undefined && channelsArr != undefined ) 
@@ -87,7 +91,8 @@ const Messages = () => {
       return () => {
         // Эта логика выполнится только при размонтировании компонента
        // console.log("Messages page unmount");
-        setLoading(true);        
+       // turned off spinner
+        setLoading(false);        
         //возвращаем показ 50 элементов
         dispatch(loadMoreItems(50));
       };
@@ -103,14 +108,14 @@ const Messages = () => {
             },
           });
           console.log(`New message was sent `, response.data); // =>[{ id: '1', name: 'general', removable: false }, ...]
-         // return true;         
+          return true;         
 
         } catch (err) {
           console.error(err);
           dispatch(setMessagesError(err.response ? err.response.statusText +`. `+err.message : err.message));
            //  throw err;
           toast.error(t('toastify_err'), toastObj);        
-         // return false;
+          return false;
          // throw err;
         }
       };
@@ -132,23 +137,29 @@ const Messages = () => {
          // console.log (pr);
         } 
         //normal sending 
+        /*  
+        else if (sendMessage(message)) {
+          // reset input
+         // inputRef.current.value = ''
+          formik.values.message = "";
+        } */
+
+        
         else sendMessage(message)
+         // reset input
         .then(() =>  formik.values.message = "")
         .finally(() => btnSubmitRef.current.removeAttribute ("disabled")); //{
           // reset input
-         // inputRef.current.value = ''
-       //   formik.values.message = "";
-       // }
+         // inputRef.current.value = ''    
       }       
-    });  
-    
-    // <Form.Group className="mb-3" controlId="formBasicText">
+    });      
+   
 
     return (
     //пропускаем перв. рендер  
     messagesArr != undefined && channelsArr != undefined ? (  
-    <div className="messages messages__container">        
-       <div className="messages__active-chanal">                
+    <div className={classNameCont}>        
+        <div className="messages__active-chanal">                
           <div className="messages__active-chanal-name">
            <b># {channelsArr.find (elem => elem.id === currentCh).name}</b><br/>
            {mesAmount} {t('key', {count: mesAmount})}
@@ -157,23 +168,20 @@ const Messages = () => {
           {loading &&
           <Spinner animation="border" role="status" variant="success">
             <span className="visually-hidden">Loading...</span>
-          </Spinner> }
-          
-          <div>                   
-           
-          </div>
-       </div>
+          </Spinner> }          
+         
+        </div>
 
-       <div ref={listRef} className="messages__list">
-        <ul  className="messages__ul">
-          { messagesArr.filter(elem => 
-            elem.channelId === currentCh )
-            .map(elem =>
-            <li key = {uniqueId()}><b>{elem.username}:</b> {elem.body}</li>
-          ).slice(-visibleItems)
-          }           
-         </ul>
-       </div>
+        <div ref={listRef} className="messages__list">
+          <ul  className="messages__ul">
+            { messagesArr.filter(elem => 
+              elem.channelId === currentCh )
+              .map(elem =>
+              <li key = {uniqueId()}><b>{elem.username}:</b> {elem.body}</li>
+            ).slice(-visibleItems)
+            }           
+          </ul>
+        </div>
 
        <div className="message__input">
         <Form 
@@ -201,6 +209,10 @@ const Messages = () => {
     ): null   
   );  
 }
+
+Messages.propTypes = {  
+  forMobile: PropTypes.bool.isRequired,   
+};
 
 export default Messages;
 

@@ -11,18 +11,21 @@ import paths from "../routes.js";
 import Messages from "./Messages.jsx";
 import Channels from "./Channels.jsx";
 import toastObj from "../toastObj.js";
+import mobileAdapter from "../mobileAdapter.js";
+import initialSt from "../initialSt.js";
 
 
 export const MainPage = () => {
   const dispatch = useDispatch();  
   const { t } = useTranslation();
   const[loading, setLoading] = useState(true);
+  const [forMobile, setForMobile] = useState(false);
   
   useEffect(() => {
     // localStorage.clear("userId");    
     //dispatch(setLogIn());
     const token = localStorage.getItem("userIdToken");
-    const firstId = "1";  //general
+    const firstId = initialSt.currentCh;  //general
     let socketV = null;
     
 
@@ -122,11 +125,14 @@ export const MainPage = () => {
 
     Promise.all([getChannels(token), getMessages(token)]).then(() => socketV = socketConnect()).catch(() => 
       toast.error(t('toastify_err'), toastObj));
+
+    const resizeReset = mobileAdapter(setForMobile);
         
     return () => {
       // Эта логика выполнится только при размонтировании компонента
       console.log("Main Page unmount");      
       socketV.disconnect();
+      resizeReset();
     };
     //dispatch(setLogIn());
     //only in first render []
@@ -143,8 +149,8 @@ export const MainPage = () => {
            </div>
            ):
          <>  
-         <Channels/>
-         <Messages/>
+          {forMobile || <Channels inOffCanvas = {false}/> }
+         <Messages forMobile = {forMobile}/>
          <ToastContainer role="alert"/>
          </>
         }
