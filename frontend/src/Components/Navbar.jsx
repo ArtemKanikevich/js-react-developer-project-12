@@ -87,26 +87,26 @@ const NavbarContainer = () => {
       <>   
       <Navbar expand="sm" className="bg_stile" >
         <Container>
-          <Navbar.Brand href='/'>Hexlet Chat</Navbar.Brand>  
-
-          { forMobile && logIn &&
-            <div className="icon__container">                   
-             <a onClick = {openOffCanvas} href="#"className='navbar__icons'>       
-                <i className= "fi fi-sr-menu-burger icon_size"></i>
-              </a>
-            </div>
-          }
-
-          { forMobile && logIn &&
-            <div className="icon__container">
-              {unRead.length > 0 && <i className="fi fi-rr-comment message__icons"></i>}
-            </div>  
-          }        
+          <div className="brand-container">
+            <Navbar.Brand href='/'>Hexlet Chat</Navbar.Brand>  
+            { forMobile && logIn &&
+              <div className="brand-container__icon">                   
+               <a onClick = {openOffCanvas} href="#"className='icon-link'>       
+                <i className= "fi fi-sr-menu-burger icon-menu"></i>
+               </a>
+              </div>
+            } 
+            { forMobile && logIn &&
+              <div className="brand-container__icon">
+               {unRead.length > 0 && <i className="fi fi-rr-comment message-icon"></i>}
+              </div>  
+            }             
+          </div>         
         
-          <div className='navbar__container'>      
+          <div className='navbar-container'>      
             { logIn && 
-            <div className='navbar__icons-item'>                   
-            <a onClick = {exitClick} href="#"className='icons'><i    className="fi fi-rr-exit icon-home"></i></a> 
+            <div className='navbar-container__icon'>                   
+            <a onClick = {exitClick} href="#"className='icon-link'><i    className="fi fi-rr-exit icon-home"></i></a> 
             </div> 
             }
             <LngButtons/>   

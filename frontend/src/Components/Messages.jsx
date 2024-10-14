@@ -99,24 +99,23 @@ const Messages = (props) => {
     }, [messagesArr, currentCh, channelsArr]);    
 
 
-      const sendMessage = async (text) =>{          
-        const newMessage = { body: text, channelId: currentCh, username: userName }; //         
+      const sendMessage = async (text) => {                   
         try {
+          const newMessage = { body: text, channelId: currentCh, username: userName };
           const response = await axios.post(paths.messagesPath(), newMessage, {
             headers: {
               Authorization: `Bearer ${token}`,
             },
           });
           console.log(`New message was sent `, response.data); // =>[{ id: '1', name: 'general', removable: false }, ...]
-          return true;         
+         // return response;            
 
         } catch (err) {
           console.error(err);
-          dispatch(setMessagesError(err.response ? err.response.statusText +`. `+err.message : err.message));
-           //  throw err;
+          dispatch(setMessagesError(err.response ? err.response.statusText +`. `+err.message : err.message));         
           toast.error(t('toastify_err'), toastObj);        
-          return false;
-         // throw err;
+         // return false;
+          throw err; // for catch block
         }
       };
 
@@ -133,24 +132,19 @@ const Messages = (props) => {
         //insert N auto messages. Type: "/insert-N"
         if (getAmount(values.message)) {
           insertMessages(getAmount(values.message), currentCh, userName, token, setLoading).finally(() => 
-            btnSubmitRef.current.removeAttribute ("disabled"));
-         // console.log (pr);
+            btnSubmitRef.current.removeAttribute ("disabled"));        
         } 
-        //normal sending 
-        /*  
-        else if (sendMessage(message)) {
-          // reset input
-         // inputRef.current.value = ''
-          formik.values.message = "";
-        } */
-
-        
+        //normal sending         
         else sendMessage(message)
          // reset input
-        .then(() =>  formik.values.message = "")
-        .finally(() => btnSubmitRef.current.removeAttribute ("disabled")); //{
-          // reset input
-         // inputRef.current.value = ''    
+        .then(() => {          
+          formik.values.message = "";
+          inputRef.current.value = '';
+         
+         }).catch(() => {
+          // console.log("error:", err);
+         }) 
+        .finally(() => btnSubmitRef.current.removeAttribute ("disabled"));            
       }       
     });      
    

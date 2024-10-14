@@ -56,10 +56,10 @@ const Channels = (props) => {
           <Dropdown as={ButtonGroup} key = {`channal-${elem.id}`}
           onSelect = {(eventKey) => showModal(eventKey, elem.id)} className="branches__toggle">
               <Button  className="w-100 text-start button__channel"
-              onClick = {handleClick}  variant={currentCh === elem.id ? "success": "light"} data-as-id = {elem.id}>{`# ${elem.name}`}
+              onClick = {handleClick}  variant={currentCh === elem.id ? "success": "light"} data-as-id = {elem.id}>{`# ${elem.name} `}
 
-               {unRead.find(chId => chId === elem.id) && (
-              <i className="fi fi-rr-comment message__icons message__icons_item"></i>)}
+              {unRead.find(chId => chId === elem.id) && (
+              <i className="fi fi-rr-comment message-icon message-icons-item"></i>)}
               </Button>
 
               <Dropdown.Toggle className="button__channel" split  variant={currentCh === elem.id ? "success": "light"} id={`dropdown-split-${elem.id}`}>
@@ -72,10 +72,10 @@ const Channels = (props) => {
           </Dropdown>
           ):
            <Button className="w-100 text-start button__channel"
-           key = {`channal-${elem.id}`} onClick = {handleClick} variant={currentCh === elem.id ? "success": "light"} data-as-id = {elem.id}>{`# ${elem.name}`}
+           key = {`channal-${elem.id}`} onClick = {handleClick} variant={currentCh === elem.id ? "success": "light"} data-as-id = {elem.id}>{`# ${elem.name} `}
 
            {unRead.find(chId => chId === elem.id) && (
-            <i className="fi fi-rr-comment message__icons message__icons_item"></i>)} 
+            <i className="fi fi-rr-comment message-icon message-icons-item"></i>)} 
            </Button>
         ))}
         </div>

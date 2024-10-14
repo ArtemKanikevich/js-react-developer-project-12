@@ -2,7 +2,7 @@ import { Slide } from 'react-toastify';
 
 const toastObj = {
     position: "top-center",
-    autoClose: 3000,
+    autoClose: 2500,
     hideProgressBar: true,
     closeOnClick: true,
     pauseOnHover: true,
